@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<title>2026证券从业资格考试练习 · 金融市场</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #2c3e50;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a5fc1 0%, #5a3f8e 100%);
+    color: #fff;
+    padding: 30px;
+    text-align: center;
+  }
+  header h1 { font-size: 26px; margin-bottom: 8px; }
+  header p { opacity: 0.9; font-size: 14px; }
+  .controls {
+    padding: 20px 30px;
+    background: #f8f9fc;
+    border-bottom: 1px solid #e0e4ed;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .controls label { font-size: 13px; color: #555; font-weight: 600; }
+  select, button {
+    padding: 8px 14px;
+    border: 1px solid #cbd2e0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  button.primary {
+    background: #4a5fc1;
+    color: #fff;
+    border-color: #4a5fc1;
+    font-weight: 600;
+  }
+  button.primary:hover { background: #3a4fb0; }
+  button:hover { background: #f0f2f8; }
+  .stats {
+    margin-left: auto;
+    font-size: 13px;
+    color: #666;
+  }
+  .stats span { font-weight: 700; color: #4a5fc1; }
+  .quiz-area { padding: 30px; min-height: 400px; }
+  .question-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #888;
+  }
+  .q-type-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag-single { background: #e3f2fd; color: #1565c0; }
+  .tag-multi { background: #fff3e0; color: #e65100; }
+  .tag-tf { background: #e8f5e9; color: #2e7d32; }
+  .question {
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    padding: 14px 16px;
+    border: 2px solid #e0e4ed;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+    line-height: 1.5;
+    user-select: none;
+  }
+  .option:hover:not(.disabled) { border-color: #4a5fc1; background: #f4f6fd; }
+  .option.selected { border-color: #4a5fc1; background: #eef1fc; }
+  .option.correct { border-color: #2e7d32; background: #e8f5e9; color: #1b5e20; }
+  .option.wrong { border-color: #c62828; background: #ffebee; color: #b71c1c; }
+  .option.disabled { cursor: default; }
+  .option-letter {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    background: #e0e4ed;
+    border-radius: 50%;
+    margin-right: 10px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .option.selected .option-letter { background: #4a5fc1; color: #fff; }
+  .option.correct .option-letter { background: #2e7d32; color: #fff; }
+  .option.wrong .option-letter { background: #c62828; color: #fff; }
+  .actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+  }
+  .actions-right { display: flex; gap: 10px; }
+  .explanation {
+    margin-top: 20px;
+    padding: 16px;
+    background: #fffbe6;
+    border-left: 4px solid #f5c518;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.7;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: #8b6f00; }
+  .result-box {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .result-box h2 { font-size: 28px; margin-bottom: 12px; color: #4a5fc1; }
+  .result-box .score {
+    font-size: 48px;
+    font-weight: 800;
+    color: #2e7d32;
+    margin: 20px 0;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #e0e4ed;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 0 30px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4a5fc1, #764ba2);
+    transition: width 0.3s;
+  }
+  .footer {
+    padding: 16px 30px;
+    background: #f8f9fc;
+    border-top: 1px solid #e0e4ed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-left a {
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .footer-left a:hover { color: #4a5fc1; }
+  .footer-left .gh-icon {
+    width: 18px; height: 18px; vertical-align: middle;
+  }
+  .footer-left .star-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border: 1px solid #cbd2e0;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #555;
+    text-decoration: none;
+    margin-left: 12px;
+    transition: all 0.2s;
+  }
+  .footer-left .star-btn:hover { background: #fff8e1; border-color: #f5c518; color: #8b6f00; }
+  .footer-right { display: flex; gap: 8px; flex-wrap: wrap; }
+  .footer-right button {
+    padding: 5px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+  .save-indicator {
+    font-size: 12px;
+    color: #2e7d32;
+    opacity: 0;
+    transition: opacity 0.3s;
+    margin-left: 8px;
+  }
+  .save-indicator.show { opacity: 1; }
+  @media (max-width: 600px) {
+    .quiz-area { padding: 20px; }
+    .controls { padding: 15px; }
+    .stats { width: 100%; margin-left: 0; }
+    header h1 { font-size: 20px; }
+    .footer { padding: 12px 15px; }
+    .footer-right button { font-size: 11px; padding: 4px 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>📚 2026证券从业资格考试练习 · 金融市场</h1>
+  </header>
+
+  <div class="controls">
+    <label>章节：</label>
+    <select id="chapterSelect">
+      <option value="all">全部章节</option>
+      <option value="1">第一章 金融市场体系</option>
+      <option value="2">第二章 中国的金融体系</option>
+      <option value="3">第三章 证券市场主体</option>
+      <option value="4">第四章 股票</option>
+    </select>
+    <label>题型：</label>
+    <select id="typeSelect">
+      <option value="all">全部题型</option>
+      <option value="single">单选题</option>
+      <option value="multi">多选题</option>
+      <option value="tf">判断题</option>
+    </select>
+    <button class="primary" onclick="startQuiz()">🔄 开始/重置</button>
+    <button onclick="toggleOrder()">🔀 <span id="orderLabel">顺序</span></button>
+    <div class="stats">
+      进度：<span id="progress">0</span> / <span id="total">0</span>
+      正确率：<span id="accuracy">0</span>%
+    </div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="quiz-area" id="quizArea"></div>
+
+  <div class="footer">
+    <div class="footer-left">
+      <a href="https://github.com/ZW471" target="_blank" rel="noopener">
+        <svg class="gh-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        ZW471/securities-exam-practice
+      </a>
+      <a class="star-btn" href="https://github.com/ZW471/securities-exam-practice" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/></svg>
+        Star
+      </a>
+      <span class="save-indicator" id="saveIndicator">已自动保存</span>
+    </div>
+    <div class="footer-right">
+      <button onclick="exportAnswers()" title="导出答题记录为JSON文件">📤 导出记录</button>
+      <button onclick="document.getElementById('importFile').click()" title="导入答题记录JSON文件">📥 导入记录</button>
+      <button onclick="clearSavedData()" title="清除所有本地保存的答题数据">🗑️ 清除记录</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importAnswers(event)">
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ 题库 ============
+const questionBank = [
+  // ===== 第一章 =====
+  {ch:1, type:'single', q:'金融市场的首要功能是（  ）。', opts:['价格发现','资金融通','提供流动性','风险管理'], ans:[1], exp:'金融市场的首要功能是资金融通，通过金融资产交易实现货币资金在供给者和需求者之间的转移。'},
+  {ch:1, type:'single', q:'下列不属于货币市场的是（  ）。', opts:['短期国库券市场','银行间同业拆借市场','中长期银行贷款市场','商业票据市场'], ans:[2], exp:'货币市场是指所交易金融资产到期期限在一年以内的金融市场。中长期银行贷款市场属于资本市场。'},
+  {ch:1, type:'single', q:'（  ）是目前全球影响力最大的利率指标之一。', opts:['美国基金利率','联邦基金利率','国际基金利率','英国基金利率'], ans:[1], exp:'美国银行间无担保短期借贷利率称为联邦基金利率，由纽约联邦储备银行负责计算和发布。'},
+  {ch:1, type:'single', q:'资金需求者与资金初始供应者之间不发生直接信贷关系，而是由金融中介机构起桥梁作用，二者只与金融机构发生债权债务关系。这反映了间接融资的（  ）特点。', opts:['资金获得的间接性','融资的相对集中性','融资信誉的较大差异性','可逆性'], ans:[0], exp:'间接融资的首要特点是资金获得的间接性。'},
+  {ch:1, type:'single', q:'全球数万亿美元的金融工具和贷款产品以（  ）为参考利率。', opts:['EURIBOR','LIBOR','HIBOR','SHIBOR'], ans:[1], exp:'伦敦银行间同业拆借利率（LIBOR）是全球金融业最重要的短期资金成本基准。'},
+  {ch:1, type:'single', q:'世界上最早的证券交易所是（  ）。', opts:['纽约证券交易所','费城证券交易所','阿姆斯特丹证券交易所','伦敦证券交易所'], ans:[2], exp:'1602年荷兰东印度公司在阿姆斯特丹创建了世界上最早的证券交易所——阿姆斯特丹证券交易所。'},
+  {ch:1, type:'multi', q:'下列与直接融资相关的说法，正确的有（  ）。', opts:['部分直接融资方式具有不可逆性','提高我国直接融资比重有利于金融和经济平稳运行','提高直接融资比重能弥补间接融资不足','直接融资比例反映一国金融体系风险和分布情况'], ans:[0,1,2,3], exp:'以上说法均正确。提高直接融资比重可以起到分散过度集中于银行的金融风险作用。'},
+  {ch:1, type:'multi', q:'下列属于消费信用的是（  ）。', opts:['助学贷款','以商品交易为目的的预付定金','国际金融租赁','企业以分期付款的形式向消费者个人提供房屋'], ans:[0,3], exp:'B属于商业信用融资，C属于租赁融资。'},
+  {ch:1, type:'multi', q:'下列关于全球金融市场发展的说法，正确的有（  ）。', opts:['1694年英国成立了世界上第一家股份制商业银行英格兰银行','2007-2009年，一场始于东南亚的次贷危机逐步演变为全球金融危机','美国金融市场是从买卖政府债券开始的','1971年布雷顿森林体系瓦解'], ans:[0,2,3], exp:'2007-2009年次贷危机始于美国，并非东南亚。'},
+  {ch:1, type:'tf', q:'国际短期资金流动是指期限为三年以上的资金的跨国流动。', opts:['正确','错误'], ans:[1], exp:'国际短期资金流动是指期限为一年或一年以下的资金的跨国流动。'},
+  {ch:1, type:'tf', q:'《巴塞尔协议》的颁布建立了资本充足率的最低标准。', opts:['正确','错误'], ans:[0], exp:'巴塞尔委员会主要宗旨之一是建立资本充足率的最低标准。'},
+  {ch:1, type:'single', q:'《证券监管目标与原则》确立了证券监管的三项目标，不包括（  ）。', opts:['保护投资者','确保市场的公平、高效和透明','减少非系统性风险','减少系统性风险'], ans:[2], exp:'三项目标为：保护投资者、确保市场公平高效透明、减少系统性风险。'},
+  {ch:1, type:'single', q:'中国香港特区政府于2009年7月推出政府债券计划的主要目的是（  ）。', opts:['提供无风险债券种类，促进债券市场发展','筹集必要资金弥补公共服务支出缺口','增加财政收入','控制通货膨胀'], ans:[0], exp:'主要目的是提供无风险债券种类，促进中国香港债券市场发展。'},
+  {ch:1, type:'single', q:'金融市场被称为经济运行状态的"晴雨表"，这体现了金融市场（  ）的重要性。', opts:['促进储蓄—投资转化','优化资源配置','反映经济状态','宏观调控'], ans:[2], exp:'金融市场是经济运行状态的"晴雨表"，为测度经济运行的景气状态提供了非常方便而且直观的途径或手段。'},
+  {ch:1, type:'single', q:'金融市场通过竞争性的价格决定（利率），将货币资金配置到生产效率高的经济主体或部门，这体现了金融市场（  ）的重要性。', opts:['促进储蓄—投资转化','优化资源配置','反映经济状态','宏观调控'], ans:[1], exp:'金融市场通过竞争性的价格决定（利率），将货币资金配置到生产效率高的经济主体或部门。'},
+  {ch:1, type:'single', q:'场外交易市场也称为（  ）。', opts:['一级市场','二级市场','柜台市场（OTC）','交易所市场'], ans:[2], exp:'场外交易市场也称为"柜台市场"（OTC），通常没有固定的交易场所，也不一定有统一的交易时间。'},
+  {ch:1, type:'single', q:'按金融资产到期期限划分，资本市场是指所交易金融资产到期期限在（  ）的金融市场。', opts:['一年以内','一年以上或者没有到期期限','六个月以内','三年以上'], ans:[1], exp:'资本市场是指所交易金融资产到期期限在1年以上或者没有到期期限的金融市场，如股票市场、中长期国债市场等。'},
+  {ch:1, type:'single', q:'下列属于货币市场的是（  ）。', opts:['股票市场','中长期国债市场','银行间同业拆借市场','中长期银行贷款市场'], ans:[2], exp:'货币市场包括银行间同业拆借市场、商业票据市场、短期国库券市场、大额可转让存单市场等。'},
+  {ch:1, type:'tf', q:'场外市场交易量远远大于交易所市场。', opts:['正确','错误'], ans:[0], exp:'场外市场交易量远远大于交易所市场，交易结构和交易方式也较为丰富。'},
+  {ch:1, type:'tf', q:'《证券监管目标与原则》具有较强的专业性和指导性，且具备强制效力。', opts:['正确','错误'], ans:[1], exp:'《证券监管目标与原则》具有较强的专业性和指导性，但并不具备强制效力。'},
+  {ch:1, type:'single', q:'巴塞尔银行监管委员会成立于（  ）年底，总部设在瑞士的巴塞尔。', opts:['1974','1983','1994','2001'], ans:[0], exp:'巴塞尔银行监管委员会由10国央行于1974年底共同成立，总部设在瑞士的巴塞尔。'},
+  {ch:1, type:'single', q:'国际证监会组织（IOSCO）成立于（  ）年。', opts:['1974','1983','1994','2001'], ans:[1], exp:'国际证监会组织（IOSCO）成立于1983年。'},
+  {ch:1, type:'single', q:'国际保险监督官协会（IAIS）于（  ）年在瑞士成立。', opts:['1974','1983','1994','2001'], ans:[2], exp:'国际保险监督官协会（IAIS）于1994年在瑞士成立。'},
+  {ch:1, type:'single', q:'中国证监会于（  ）年成为IOSCO的正式会员。', opts:['1983','1990','1995','2001'], ans:[2], exp:'中国证监会于1995年成为IOSCO的正式会员。'},
+  {ch:1, type:'single', q:'伦敦外汇市场是全球（  ）的外汇批发市场。', opts:['最小','第二大','第三大','最大'], ans:[3], exp:'伦敦外汇市场是全球最大的外汇批发市场。'},
+  {ch:1, type:'single', q:'美国是仅次于英国的全球第（  ）大外汇市场。', opts:['一','二','三','四'], ans:[1], exp:'美国是仅次于英国的全球第二大外汇市场。'},
+  {ch:1, type:'single', q:'按年交易量排名，中国香港外汇市场在全球排（  ）。', opts:['第一名','第二名','第三名','第四名'], ans:[3], exp:'按年交易量排名，中国香港外汇市场在全球排第四名。'},
+  {ch:1, type:'single', q:'英国的黄金市场是全球（  ）的黄金现货市场。', opts:['最小','第二大','第三大','最大'], ans:[3], exp:'英国的黄金市场是全球最大的黄金现货市场。'},
+  {ch:1, type:'single', q:'美国的金融市场监管体制是（  ）。', opts:['单一监管体制','统一监管体制','"双层多头"金融监管体制','自律监管体制'], ans:[2], exp:'美国的金融市场监管体制是"双层多头"金融监管体制，即联邦监管和州监管两个层级。'},
+  {ch:1, type:'single', q:'2001年英国金融服务局（FSA）正式成立，负责对（  ）金融机构实施审慎监管。', opts:['仅银行业','仅证券业','仅保险业','银行、证券、保险业'], ans:[3], exp:'2001年FSA正式成立，负责对银行、证券、保险业金融机构实施审慎监管，统一监管体制得以确立。'},
+  {ch:1, type:'multi', q:'下列关于场外交易市场的说法，正确的有（  ）。', opts:['通常没有固定的交易场所','交易量远远大于交易所市场','也称为"柜台市场"（OTC）','与交易所市场之间的界限已经越来越模糊'], ans:[0,1,2,3], exp:'以上说法均正确。场外市场没有固定场所，交易量远大于交易所市场，也称OTC，且随着场外市场组织化程度提高，与交易所市场界限越来越模糊。'},
+  {ch:1, type:'multi', q:'国际短期资金流动包括（  ）。', opts:['贸易资金的流动','套利性资金的流动','保值性资金的流动','投机性资金的流动'], ans:[0,1,2,3], exp:'国际短期资金流动包括贸易资金的流动（最传统）、套利性资金的流动、保值性资金的流动（又称避险性资金流动或资本外逃）、投机性资金的流动。'},
+  {ch:1, type:'single', q:'国际短期资金流动中，（  ）是最传统的国际资金流动方式。', opts:['贸易资金的流动','套利性资金的流动','保值性资金的流动','投机性资金的流动'], ans:[0], exp:'贸易资金的流动是最传统的国际资金流动方式。'},
+  {ch:1, type:'single', q:'17世纪出现了有形的、有组织的金融市场。16世纪中叶出现了（  ）相分离的股份公司。', opts:['所有权和经营权','所有权和管理权','经营权和收益权','管理权和控制权'], ans:[0], exp:'16世纪中叶，所有权和经营权相分离的股份公司出现。'},
+  {ch:1, type:'single', q:'1694年英国成立了世界上第一家股份制商业银行——（  ），标志着英国现代银行制度的确立。', opts:['巴克莱银行','汇丰银行','英格兰银行','渣打银行'], ans:[2], exp:'1694年英国成立了世界上第一家股份制商业银行——英格兰银行。'},
+  {ch:1, type:'single', q:'美国金融市场是从买卖（  ）开始的。', opts:['股票','政府债券','公司债券','期货'], ans:[1], exp:'美国金融市场是从买卖政府债券开始的，1790年成立了美国第一个证券交易所——费城证券交易所。'},
+
+  // ===== 第二章 =====
+  {ch:2, type:'single', q:'中国人民银行正式成立于（  ）。', opts:['1948年12月1日','1949年10月1日','1979年1月1日','1983年9月17日'], ans:[0], exp:'1948年12月1日，中国人民银行正式成立，第一套人民币同时发行。'},
+  {ch:2, type:'single', q:'2003年4月，中国银行业监督管理委员会成立，标志着我国（  ）的金融体系得以确立。', opts:['混业经营、统一监管','分业经营、分业监管','分业经营、统一监管','混业经营、分业监管'], ans:[1], exp:'2003年4月标志着"分业经营、分业监管"的金融体系确立。'},
+  {ch:2, type:'single', q:'我国政策性银行不包括（  ）。', opts:['国家开发银行','中国进出口银行','中国农业发展银行','中国工商银行'], ans:[0], exp:'国家开发银行是开发性金融机构。我国政策性银行是中国进出口银行和中国农业发展银行。'},
+  {ch:2, type:'single', q:'中国金融期货交易所成立于（  ）。', opts:['2006年9月8日','2010年4月16日','2015年2月9日','1990年10月12日'], ans:[0], exp:'2006年9月8日中国金融期货交易所在上海成立。'},
+  {ch:2, type:'single', q:'我国首个场内金融期权是（  ）。', opts:['沪深300股指期权','上证50ETF期权','沪深300股指期货','中证500ETF期权'], ans:[1], exp:'2015年2月9日上证50ETF期权在上海证券交易所正式上市交易。'},
+  {ch:2, type:'single', q:'货币政策对金融市场有（  ）影响。', opts:['间接的、次要的','直接的、主要的','间接的、主要的','直接的、次要的'], ans:[1], exp:'货币政策对金融市场有着直接的、主要的影响。'},
+  {ch:2, type:'single', q:'衡量一国经济状况的最佳指标是（  ）。', opts:['CPI','GDP','PPI','PMI'], ans:[1], exp:'GDP是衡量一国经济状况的最佳指标。'},
+  {ch:2, type:'single', q:'货币政策的最终目标不包括（  ）。', opts:['稳定物价','充分就业','经济增长','基础货币'], ans:[3], exp:'最终目标包括稳定物价（首要目标）、充分就业、经济增长、国际收支平衡、金融稳定。基础货币是操作目标。'},
+  {ch:2, type:'single', q:'下列属于一般性货币政策工具的是（  ）。', opts:['优惠利率','量化宽松','公开市场业务','直接信用控制'], ans:[2], exp:'一般性货币政策工具口诀"存再公"：存款准备金制度、再贴现政策、公开市场业务。'},
+  {ch:2, type:'single', q:'中央银行大规模购买长期证券，以降低长期利率的政策工具是（  ）。', opts:['优惠利率','量化宽松','道义劝告','窗口指导'], ans:[1], exp:'量化宽松指中央银行大规模购买长期证券以降低长期利率。'},
+  {ch:2, type:'single', q:'中央银行货币政策传导机制中，"货币供应量↑→实际利率↓→投资↑→总产出↑"描述的是（  ）。', opts:['利率传导机制','信用传导机制','资产价格传导机制','汇率传导机制'], ans:[0], exp:'以利率为渠道是传统凯恩斯主义学派货币政策传导机制的核心观点。'},
+  {ch:2, type:'single', q:'根据货币乘数公式，若现金比率c=0.35，超额准备金率e=0.05，法定准备金率r=0.10，则货币乘数约为（  ）。', opts:['2.0','2.7','3.5','5.0'], ans:[1], exp:'货币乘数=(1+c)/(c+e+r)=(1+0.35)/(0.35+0.05+0.10)=2.7。'},
+  {ch:2, type:'multi', q:'近年来金融业对外开放的主要政策措施（央行"三大原则"）包括（  ）。', opts:['准入前国民待遇和负面清单原则','与汇率形成机制改革和资本项目可兑换进程相互配合','开放的同时重视防范金融风险','全面放开资本管制'], ans:[0,1,2], exp:'D不属于央行"三大原则"。'},
+  {ch:2, type:'multi', q:'按市场功能不同，资本市场可分为（  ）。', opts:['场外市场','发行市场','场内市场','交易市场'], ans:[1,3], exp:'按市场功能分为发行市场和交易市场；场内和场外是按组织形式划分。'},
+  {ch:2, type:'multi', q:'下列属于我国场内市场的有（  ）。', opts:['沪深主板市场','科创板市场','创业板市场','区域性股权市场'], ans:[0,1,2], exp:'区域性股权市场属于场外市场。'},
+  {ch:2, type:'single', q:'我国首个实行注册制的场内市场是（  ）。', opts:['主板','科创板','创业板','新三板'], ans:[1], exp:'2019年6月13日科创板在上海证券交易所开板，试点注册制，是我国首个实行注册制的场内市场。'},
+  {ch:2, type:'single', q:'全国中小企业股份转让系统（新三板）成立于（  ）。', opts:['2006年9月','2012年9月20日','2019年6月13日','2021年9月3日'], ans:[1], exp:'新三板经国务院批准设立，成立于2012年9月20日。'},
+  {ch:2, type:'single', q:'北京证券交易所是经国务院批准设立的我国（  ）。', opts:['第一家证券交易所','第一家公司制证券交易所','第一家会员制证券交易所','第一家场外市场'], ans:[1], exp:'北京证券交易所是经国务院批准设立的我国第一家公司制证券交易所。'},
+  {ch:2, type:'tf', q:'"货币供应量↑→实际利率↓→投资↑→总产出↑"描述的是货币政策利率传导机制。', opts:['正确','错误'], ans:[0], exp:'以利率为渠道是传统凯恩斯主义学派货币政策传导机制的核心观点。'},
+  {ch:2, type:'single', q:'2019年1月首次获准进入中国信用评级市场的外资公司是（  ）。', opts:['标普公司','穆迪公司','惠誉公司','大公国际'], ans:[0], exp:'2019年1月28日，美国标普公司作为首家外资公司获准进入中国信用评级市场。'},
+
+  // ===== 第三章 =====
+  {ch:3, type:'single', q:'投资者开立证券账户应当向（  ）提出申请。', opts:['证券交易所','证券业协会','证监会','证券登记结算机构'], ans:[3], exp:'投资者开立证券账户应当向证券登记结算机构提出申请。'},
+  {ch:3, type:'single', q:'证券投资者保护基金公司的注册资金由（  ）一次性拨付。', opts:['国务院','财政部','中国证监会','中国人民银行'], ans:[1], exp:'由国务院出资，财政部一次性拨付注册资金63亿元。'},
+  {ch:3, type:'single', q:'下列不属于中国证券业协会职能的是（  ）。', opts:['传导','自律','服务','整合'], ans:[3], exp:'中国证券业协会履行"自律、服务、传导"三大职能。'},
+  {ch:3, type:'single', q:'证券公司是由（  ）审查批准设立的经营证券业务的金融机构。', opts:['中国证券业协会','证券交易所','国务院证券监督管理机构','中国人民银行'], ans:[2], exp:'设立证券公司必须经国务院证券监督管理机构审查批准。'},
+  {ch:3, type:'single', q:'证券公司分类是以（  ）为基础。', opts:['公司业务发展状况及盈利能力','风险管理能力、持续合规状况','公司注册资本规模和净资产','公司规模和盈利水平'], ans:[1], exp:'证券公司分类是指以证券公司风险管理能力、持续合规状况为基础，结合公司业务发展状况。'},
+  {ch:3, type:'single', q:'根据分类监管，证券公司分为（  ）。', opts:['三大类9个级别','四大类10个级别','五大类11个级别','六大类12个级别'], ans:[2], exp:'将证券公司分为五大类11个级别：A(AAA/AA/A)、B(BBB/BB/B)、C(CCC/CC/C)、D、E。'},
+  {ch:3, type:'single', q:'证券公司年度报告的报送期限是（  ）。', opts:['2个月内','3个月内','4个月内','6个月内'], ans:[2], exp:'年度报告：每个会计年度结束之日起4个月内报送。'},
+  {ch:3, type:'single', q:'2007年全美证券交易商协会与纽约证券交易所监管委员会合并成立金融业监管局（FINRA），该机构是证券业的（  ）。', opts:['行政监管机构','自律性组织','非自律性组织','交易所'], ans:[1], exp:'FINRA是证券业的自律性组织。'},
+  {ch:3, type:'single', q:'证券承销中，（  ）是指证券公司代发行人发售证券，承销期结束时将未售出的证券全部退还给发行人。', opts:['代销','全额包销','余额包销','自营'], ans:[0], exp:'代销：承销期结束时将未售出的证券全部退还给发行人。'},
+  {ch:3, type:'single', q:'证券公司申请融资融券业务资格，要求最近（  ）内不存在因涉嫌违法违规正被中国证监会立案调查的情形。', opts:['一年','两年','三年','六个月'], ans:[1], exp:'公司最近两年内不存在因涉嫌违法违规正被中国证监会立案调查或者正处于整改期间的情形。'},
+  {ch:3, type:'single', q:'证券金融公司的注册资本不少于人民币（  ），且为实收资本。', opts:['30亿元','60亿元','80亿元','100亿元'], ans:[1], exp:'证券金融公司注册资本不少于人民币60亿元且为实收资本。'},
+  {ch:3, type:'single', q:'证券交易所以（  ）方式决定交易价格。', opts:['协商定价','做市商报价','公开竞价','拍卖'], ans:[2], exp:'证券交易所通过公开竞价的方式决定交易价格。'},
+  {ch:3, type:'single', q:'我国内地两家证券交易所（上交所和深交所）均采用（  ）组织形式。', opts:['公司制','会员制','合伙制','股份制'], ans:[1], exp:'我国内地两家证券交易所均采用会员制组织形式，是非营利性的事业法人。'},
+  {ch:3, type:'single', q:'中国证券业协会成立于（  ）。', opts:['1990年11月','1991年8月28日','1992年10月','2001年3月30日'], ans:[1], exp:'中国证券业协会成立于1991年8月28日。'},
+  {ch:3, type:'single', q:'证券登记结算机构目前采取（  ）结算方式。', opts:['全额结算','多边净额结算','单边全额结算','场外结算'], ans:[1], exp:'目前我国对证券交易所达成的多数证券交易均采取多边净额结算方式。'},
+  {ch:3, type:'multi', q:'证券公司信息公开披露制度，要求所有证券公司实行（  ）。', opts:['实际控制人经营信息公开披露','基本信息公示','财务信息公开披露','控股股东经营信息公开披露'], ans:[1,2], exp:'证券公司信息公开披露制度要求所有证券公司实行基本信息公示和财务信息公开披露。'},
+  {ch:3, type:'multi', q:'政府发行债券所筹集资金的用途包括（  ）。', opts:['弥补财政赤字','协调财政资金短期周转','收购上市公司股权','兴建政府投资的大型基础性建设项目'], ans:[0,1,3], exp:'政府发行债券资金既可用于协调财政资金短期周转、弥补财政赤字、兴建大型建设项目，也可用于实施某种特殊政策或弥补战争费用。'},
+  {ch:3, type:'multi', q:'关于证券投资者保护基金的来源，下列说法正确的是（  ）。', opts:['所有在中国境内注册的证券公司，按其营业收入一定比例缴纳基金','发行股票、可转债等证券时申购冻结资金的利息收入','依法向有关责任方追偿所得和从证券公司破产清算中受偿收入','中国证券登记结算公司的风险性资金'], ans:[0,1,2], exp:'D选项不属于证券投资者保护基金来源。'},
+  {ch:3, type:'multi', q:'机构投资者的特点包括（  ）。', opts:['投资资金规模化','投资管理专业化','投资结构组合化','投资行为规范化'], ans:[0,1,2,3], exp:'机构投资者的四大特点全部正确。'},
+  {ch:3, type:'tf', q:'机构投资者包括政府机构类投资者、金融机构类投资者、保险经营机构投资者、合格境外投资者以及合格境内投资者。', opts:['正确','错误'], ans:[1], exp:'机构投资者主要包括政府机构类、金融机构类、合格境外投资者（QFII、RQFII）、合格境内机构投资者（QDII）、企业和事业法人类机构投资者以及基金类投资者（不包括保险经营机构投资者）。'},
+  {ch:3, type:'tf', q:'为法人、自然人及其他组织收购上市公司及相关的资产重组、债务重组等提供咨询服务，这属于证券公司的资产管理业务。', opts:['正确','错误'], ans:[1], exp:'这属于财务顾问业务，不是资产管理业务。'},
+
+  // ===== 第四章 =====
+  {ch:4, type:'single', q:'股票最基本的特征是（  ）。', opts:['收益性','流动性','风险性','永久性'], ans:[0], exp:'收益性是股票最基本的特征。'},
+  {ch:4, type:'single', q:'股东持有的股票数量增长，但在公司中占有的权益比例和账面价值均无变化的股利形式是（  ）。', opts:['现金股利','股票股利','财产股利','负债股利'], ans:[1], exp:'股票股利（送股）后，股东持有的股份数量增长，但权益比例和账面价值均无变化。'},
+  {ch:4, type:'single', q:'股份公司股东大会作出以下决议，必须经出席会议的股东所持表决权的2/3以上通过的是（  ）。', opts:['董事会任命','发行债券','修改公司章程','普通决议'], ans:[2], exp:'修改公司章程、增减注册资本、合并分立解散、变更公司形式需2/3以上通过。'},
+  {ch:4, type:'single', q:'以募集设立方式设立股份有限公司，发起人认购的股份不得少于公司章程规定的公司设立时应发行股份总数的（  ）。', opts:['25%','35%','50%','65%'], ans:[1], exp:'以募集设立方式设立的，发起人认购的股份不得少于35%。'},
+  {ch:4, type:'single', q:'优先股股东的清偿顺序（  ）。', opts:['先于普通股，先于债权人','先于普通股，次于债权人','次于普通股，先于债权人','次于普通股，次于债权人'], ans:[1], exp:'优先股的清偿顺序先于普通股，而次于债权人。'},
+  {ch:4, type:'single', q:'在科创板上市的发行人，发行后股本总额不低于人民币（  ）。', opts:['3000万元','4000万元','5000万元','1亿元'], ans:[0], exp:'科创板发行后股本总额不低于人民币3000万元。'},
+  {ch:4, type:'single', q:'在沪深主板首次公开发行上市的发行人，发行后股本总额不低于人民币（  ）。', opts:['3000万元','4000万元','5000万元','1亿元'], ans:[2], exp:'主板首次公开发行上市后股本总额不低于5000万元。'},
+  {ch:4, type:'single', q:'科创板投资者交易权限开通需要前（  ）个交易日日均不低于人民币50万元。', opts:['15','20','30','60'], ans:[1], exp:'科创板投资者交易权限需要前20个交易日日均资产不低于人民币50万元，且有2年证券交易经验。'},
+  {ch:4, type:'single', q:'上交所主板股票的涨跌幅限制为（  ）。', opts:['5%','10%','20%','30%'], ans:[1], exp:'上交所主板一般股票的涨跌幅为10%，ST和*ST股票为5%。'},
+  {ch:4, type:'single', q:'我国沪深300指数的基日是（  ）。', opts:['1990年12月19日','2004年12月31日','2005年4月8日','2010年4月16日'], ans:[1], exp:'沪深300指数基日为2004年12月31日，基点为1000点。'},
+  {ch:4, type:'single', q:'世界上最早、最享盛誉和最有影响的股价指数是（  ）。', opts:['道琼斯工业股价平均数','标准普尔500指数','纳斯达克指数','金融时报指数'], ans:[0], exp:'道琼斯工业股价平均数以30家著名大工商业公司股票为编制对象。'},
+  {ch:4, type:'single', q:'恒生指数是以（  ）为权数。', opts:['总股本','发行量','自由流通股本','成交量'], ans:[1], exp:'恒生指数以发行量为权数，由香港恒生银行全资附属的恒生指数服务有限公司编制。'},
+  {ch:4, type:'single', q:'上交所、深交所的开盘集合竞价时间是（  ）。', opts:['9:00-9:15','9:15-9:25','9:25-9:30','9:30-9:45'], ans:[1], exp:'上交所、深交所、北交所开盘集合竞价时间均为9:15-9:25。'},
+  {ch:4, type:'single', q:'证券交易申报原则是（  ）。', opts:['价格优先、时间优先','时间优先、客户优先','客户优先、价格优先','数量优先、价格优先'], ans:[1], exp:'证券经纪商申报原则为时间优先、客户优先。'},
+  {ch:4, type:'single', q:'我国结算模式采用的是（  ）模式。', opts:['个人结算','法人结算','双边结算','场外结算'], ans:[1], exp:'我国证券市场采用的是法人结算模式。'},
+  {ch:4, type:'multi', q:'普通股股东的权利包括（  ）。', opts:['公司重大决策参与权','公司资产收益权','剩余资产分配权','知情权'], ans:[0,1,2,3], exp:'普通股股东的权利包括公司重大决策参与权、资产收益权、剩余资产分配权和其他权利（知情权、处置权等）。'},
+  {ch:4, type:'multi', q:'上市公司现金股利的分配形式中，要求公司处于成熟期且有重大资金支出安排的，现金分红占本次利润分配最低比例为（  ）。', opts:['80%','40%','20%','10%'], ans:[1], exp:'成熟期且有重大资金支出安排的，现金分红比例最低为40%。'},
+  {ch:4, type:'multi', q:'根据《上海证券交易所科创板股票上市规则》，发行人申请在上海证券交易所科创板上市，主要的上市条件有（  ）。', opts:['公司股本总额超过人民币4亿元的，首次公开发行股份的比例为10%以上','市值和财务指标符合上交所制定的5条标准之一','发行后股本总额不低于人民币3000万元','首次公开发行的股份超过公司股份总数的25%以上'], ans:[0,1,2,3], exp:'以上都是科创板上市条件。'},
+  {ch:4, type:'multi', q:'集合竞价价格的确定原则包括（  ）。', opts:['可实现最大成交量的价格','高于该价格的买入申报与低于该价格的卖出申报全部成交','与该价格相同的买方或卖方至少有一方全部成交','所有成交都以同一成交价成交'], ans:[0,1,2,3], exp:'以上均为集合竞价价格确定的原则。'},
+  {ch:4, type:'tf', q:'红筹股属于外资股。', opts:['正确','错误'], ans:[1], exp:'红筹股不属于外资股，是指在中国境外注册、在香港上市、但主要业务在中国内地或大部分股东权益来自中国内地公司的股票。'},
+  {ch:4, type:'tf', q:'股票分割后，股东占股权重会发生变化。', opts:['正确','错误'], ans:[1], exp:'股票的分割、合并不会引起股东占股权重的变化。'},
+  {ch:4, type:'tf', q:'我国场内交易市场包括主板市场、科创板市场、创业板市场和证券公司柜台市场。', opts:['正确','错误'], ans:[1], exp:'我国场内交易市场包括主板市场、科创板市场、创业板市场和全国中小企业股份转让系统以及北京证券交易所（不包括证券公司柜台市场）。'},
+  {ch:4, type:'single', q:'优先股股东恢复表决权的情形是公司累计（  ）个会计年度或连续（  ）个会计年度未按约定支付优先股股息。', opts:['2，1','3，2','4，3','5，4'], ans:[1], exp:'公司累计3个会计年度或连续2个会计年度未按约定支付优先股股息的，优先股股东可以享有公司章程规定的表决权。'},
+];
+
+// ============ 持久化存储 ============
+const STORAGE_KEY = 'sec_exam_answers';
+
+// 为每道题生成唯一ID（基于章节+题型+题目前20字）
+function questionId(q) {
+  return `ch${q.ch}_${q.type}_${q.q.substring(0, 20)}`;
+}
+
+function loadSavedData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+function saveAnswerRecord(q, selectedArr, isCorrect) {
+  const data = loadSavedData();
+  data[questionId(q)] = {
+    selected: selectedArr,
+    correct: isCorrect,
+    timestamp: Date.now()
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  flashSaveIndicator();
+}
+
+function getSavedAnswer(q) {
+  const data = loadSavedData();
+  return data[questionId(q)] || null;
+}
+
+function flashSaveIndicator() {
+  const el = document.getElementById('saveIndicator');
+  if (!el) return;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function exportAnswers() {
+  const data = loadSavedData();
+  if (Object.keys(data).length === 0) {
+    alert('当前没有答题记录可导出');
+    return;
+  }
+  const exportObj = {
+    app: '金融市场基础知识练习App',
+    exportTime: new Date().toISOString(),
+    totalRecords: Object.keys(data).length,
+    answers: data
+  };
+  const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `证券练习记录_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importAnswers(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      const answers = imported.answers || imported;
+      if (typeof answers !== 'object') throw new Error('格式错误');
+      const existing = loadSavedData();
+      const merged = { ...existing, ...answers };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      const newCount = Object.keys(answers).length;
+      alert(`导入成功！共导入 ${newCount} 条记录（已与现有记录合并）`);
+      startQuiz(); // 刷新显示
+    } catch (err) {
+      alert('导入失败：文件格式不正确。请使用本应用导出的 JSON 文件。');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // 允许重复导入同一文件
+}
+
+function clearSavedData() {
+  if (!confirm('确定清除所有本地答题记录？此操作不可恢复。')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  alert('答题记录已清除');
+  startQuiz();
+}
+
+// ============ 状态 ============
+let state = {
+  questions: [],
+  index: 0,
+  answered: [],
+  userSelections: [],  // 记录每题用户选的选项
+  selected: new Set(),
+  correct: 0,
+  random: false,
+};
+
+// ============ 初始化 ============
+function filterQuestions() {
+  const ch = document.getElementById('chapterSelect').value;
+  const tp = document.getElementById('typeSelect').value;
+  let list = questionBank.filter(q => {
+    if (ch !== 'all' && q.ch != ch) return false;
+    if (tp !== 'all' && q.type !== tp) return false;
+    return true;
+  });
+  if (state.random) list = [...list].sort(() => Math.random() - 0.5);
+  return list;
+}
+
+function startQuiz() {
+  state.questions = filterQuestions();
+  state.index = 0;
+  state.answered = new Array(state.questions.length).fill(false);
+  state.userSelections = new Array(state.questions.length).fill(null);
+  state.selected = new Set();
+  state.correct = 0;
+
+  // 恢复已保存的答题记录
+  const saved = loadSavedData();
+  state.questions.forEach((q, i) => {
+    const record = saved[questionId(q)];
+    if (record) {
+      state.answered[i] = true;
+      state.userSelections[i] = record.selected;
+      if (record.correct) state.correct++;
+    }
+  });
+
+  document.getElementById('total').textContent = state.questions.length;
+  renderQuestion();
+}
+
+function toggleOrder() {
+  state.random = !state.random;
+  document.getElementById('orderLabel').textContent = state.random ? '随机' : '顺序';
+  startQuiz();
+}
+
+// ============ 渲染 ============
+function renderQuestion() {
+  const area = document.getElementById('quizArea');
+  if (state.questions.length === 0) {
+    area.innerHTML = '<div class="result-box"><h2>😕 无可用题目</h2><p>请调整筛选条件</p></div>';
+    updateStats();
+    return;
+  }
+  if (state.index >= state.questions.length) {
+    renderResult();
+    return;
+  }
+  const q = state.questions[state.index];
+  const typeMap = {single: ['单选题','tag-single'], multi: ['多选题','tag-multi'], tf: ['判断题','tag-tf']};
+  const [typeLabel, typeClass] = typeMap[q.type];
+  const chMap = {1:'第一章',2:'第二章',3:'第三章',4:'第四章'};
+  const letters = ['A','B','C','D','E'];
+
+  state.selected = new Set();
+  const alreadyAnswered = state.answered[state.index];
+  const savedSelection = state.userSelections[state.index];
+
+  area.innerHTML = `
+    <div class="question-meta">
+      <span><span class="q-type-tag ${typeClass}">${typeLabel}</span> ${chMap[q.ch]}</span>
+      <span>第 ${state.index + 1} / ${state.questions.length} 题</span>
+    </div>
+    <div class="question">${state.index + 1}. ${q.q}</div>
+    <div class="options" id="optionsList">
+      ${q.opts.map((o, i) => `
+        <div class="option" data-idx="${i}" onclick="selectOption(${i})">
+          <span class="option-letter">${letters[i]}</span>${o}
+        </div>
+      `).join('')}
+    </div>
+    <div class="explanation" id="explanation">
+      <strong>【答案】</strong>${q.ans.map(i => letters[i]).join('')}<br>
+      <strong>【解析】</strong>${q.exp}
+    </div>
+    <div class="actions">
+      <button onclick="prevQuestion()" ${state.index === 0 ? 'disabled' : ''}>← 上一题</button>
+      <div class="actions-right">
+        <button id="submitBtn" class="primary" onclick="submitAnswer()">提交答案</button>
+        <button onclick="nextQuestion()">下一题 →</button>
+      </div>
+    </div>
+  `;
+
+  // 如果此题已有保存记录，恢复显示
+  if (alreadyAnswered && savedSelection) {
+    const correctSet = new Set(q.ans);
+    const selSet = new Set(savedSelection);
+    document.querySelectorAll('.option').forEach((el, idx) => {
+      el.classList.add('disabled');
+      if (correctSet.has(idx)) el.classList.add('correct');
+      else if (selSet.has(idx)) el.classList.add('wrong');
+    });
+    document.getElementById('explanation').classList.add('show');
+    document.getElementById('submitBtn').disabled = true;
+  }
+  updateStats();
+}
+
+function selectOption(i) {
+  if (state.answered[state.index]) return;
+  const q = state.questions[state.index];
+  if (q.type === 'multi') {
+    if (state.selected.has(i)) state.selected.delete(i);
+    else state.selected.add(i);
+  } else {
+    state.selected.clear();
+    state.selected.add(i);
+  }
+  document.querySelectorAll('.option').forEach((el, idx) => {
+    el.classList.toggle('selected', state.selected.has(idx));
+  });
+}
+
+function submitAnswer() {
+  if (state.selected.size === 0) {
+    alert('请先选择答案');
+    return;
+  }
+  const q = state.questions[state.index];
+  const correctSet = new Set(q.ans);
+  const selected = state.selected;
+  const isCorrect = correctSet.size === selected.size && [...correctSet].every(x => selected.has(x));
+
+  if (!state.answered[state.index]) {
+    state.answered[state.index] = true;
+    state.userSelections[state.index] = [...selected];
+    if (isCorrect) state.correct++;
+    saveAnswerRecord(q, [...selected], isCorrect);
+  }
+
+  document.querySelectorAll('.option').forEach((el, idx) => {
+    el.classList.add('disabled');
+    el.classList.remove('selected');
+    if (correctSet.has(idx)) el.classList.add('correct');
+    else if (selected.has(idx)) el.classList.add('wrong');
+  });
+  document.getElementById('explanation').classList.add('show');
+  document.getElementById('submitBtn').disabled = true;
+  updateStats();
+}
+
+function nextQuestion() {
+  state.index++;
+  renderQuestion();
+}
+
+function prevQuestion() {
+  if (state.index > 0) {
+    state.index--;
+    renderQuestion();
+  }
+}
+
+function updateStats() {
+  document.getElementById('progress').textContent = state.index + 1 > state.questions.length ? state.questions.length : state.index + 1;
+  const answeredCount = state.answered.filter(x => x).length;
+  const acc = answeredCount === 0 ? 0 : Math.round(state.correct / answeredCount * 100);
+  document.getElementById('accuracy').textContent = acc;
+  const fill = state.questions.length === 0 ? 0 : (state.index + 1) / state.questions.length * 100;
+  document.getElementById('progressFill').style.width = Math.min(fill, 100) + '%';
+}
+
+function renderResult() {
+  const area = document.getElementById('quizArea');
+  const total = state.questions.length;
+  const score = Math.round(state.correct / total * 100);
+  let emoji = '🎉', comment = '太棒了！继续保持！';
+  if (score < 60) { emoji = '💪'; comment = '需要再加油，重点复习错题！'; }
+  else if (score < 80) { emoji = '👍'; comment = '不错，再接再厉！'; }
+  area.innerHTML = `
+    <div class="result-box">
+      <h2>${emoji} 练习完成</h2>
+      <div class="score">${score}分</div>
+      <p>共 ${total} 题，答对 ${state.correct} 题</p>
+      <p style="margin-top:10px;color:#888;">${comment}</p>
+      <button class="primary" style="margin-top:24px;padding:12px 30px;font-size:15px;" onclick="startQuiz()">🔄 再练一次</button>
+    </div>
+  `;
+  document.getElementById('progressFill').style.width = '100%';
+}
+
+// 启动
+startQuiz();
+</script>
+</body>
+</html>

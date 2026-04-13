@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<title>2026证券从业资格考试练习 · 法律法规</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #2c3e50;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a5fc1 0%, #5a3f8e 100%);
+    color: #fff;
+    padding: 30px;
+    text-align: center;
+  }
+  header h1 { font-size: 26px; margin-bottom: 8px; }
+  header p { opacity: 0.9; font-size: 14px; }
+  .controls {
+    padding: 20px 30px;
+    background: #f8f9fc;
+    border-bottom: 1px solid #e0e4ed;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .controls label { font-size: 13px; color: #555; font-weight: 600; }
+  select, button {
+    padding: 8px 14px;
+    border: 1px solid #cbd2e0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  button.primary {
+    background: #4a5fc1;
+    color: #fff;
+    border-color: #4a5fc1;
+    font-weight: 600;
+  }
+  button.primary:hover { background: #3a4fb0; }
+  button:hover { background: #f0f2f8; }
+  .stats {
+    margin-left: auto;
+    font-size: 13px;
+    color: #666;
+  }
+  .stats span { font-weight: 700; color: #4a5fc1; }
+  .quiz-area { padding: 30px; min-height: 400px; }
+  .question-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #888;
+  }
+  .q-type-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag-single { background: #e3f2fd; color: #1565c0; }
+  .tag-multi { background: #fff3e0; color: #e65100; }
+  .tag-tf { background: #e8f5e9; color: #2e7d32; }
+  .question {
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    padding: 14px 16px;
+    border: 2px solid #e0e4ed;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+    line-height: 1.5;
+    user-select: none;
+  }
+  .option:hover:not(.disabled) { border-color: #4a5fc1; background: #f4f6fd; }
+  .option.selected { border-color: #4a5fc1; background: #eef1fc; }
+  .option.correct { border-color: #2e7d32; background: #e8f5e9; color: #1b5e20; }
+  .option.wrong { border-color: #c62828; background: #ffebee; color: #b71c1c; }
+  .option.disabled { cursor: default; }
+  .option-letter {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    background: #e0e4ed;
+    border-radius: 50%;
+    margin-right: 10px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .option.selected .option-letter { background: #4a5fc1; color: #fff; }
+  .option.correct .option-letter { background: #2e7d32; color: #fff; }
+  .option.wrong .option-letter { background: #c62828; color: #fff; }
+  .actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+  }
+  .actions-right { display: flex; gap: 10px; }
+  .explanation {
+    margin-top: 20px;
+    padding: 16px;
+    background: #fffbe6;
+    border-left: 4px solid #f5c518;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.7;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: #8b6f00; }
+  .result-box {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .result-box h2 { font-size: 28px; margin-bottom: 12px; color: #4a5fc1; }
+  .result-box .score {
+    font-size: 48px;
+    font-weight: 800;
+    color: #2e7d32;
+    margin: 20px 0;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #e0e4ed;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 0 30px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4a5fc1, #764ba2);
+    transition: width 0.3s;
+  }
+  .footer {
+    padding: 16px 30px;
+    background: #f8f9fc;
+    border-top: 1px solid #e0e4ed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-left a {
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .footer-left a:hover { color: #4a5fc1; }
+  .footer-left .gh-icon {
+    width: 18px; height: 18px; vertical-align: middle;
+  }
+  .footer-left .star-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border: 1px solid #cbd2e0;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #555;
+    text-decoration: none;
+    margin-left: 12px;
+    transition: all 0.2s;
+  }
+  .footer-left .star-btn:hover { background: #fff8e1; border-color: #f5c518; color: #8b6f00; }
+  .footer-right { display: flex; gap: 8px; flex-wrap: wrap; }
+  .footer-right button {
+    padding: 5px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+  .save-indicator {
+    font-size: 12px;
+    color: #2e7d32;
+    opacity: 0;
+    transition: opacity 0.3s;
+    margin-left: 8px;
+  }
+  .save-indicator.show { opacity: 1; }
+  @media (max-width: 600px) {
+    .quiz-area { padding: 20px; }
+    .controls { padding: 15px; }
+    .stats { width: 100%; margin-left: 0; }
+    header h1 { font-size: 20px; }
+    .footer { padding: 12px 15px; }
+    .footer-right button { font-size: 11px; padding: 4px 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>📚 2026证券从业资格考试练习 · 法律法规</h1>
+  </header>
+
+  <div class="controls">
+    <label>章节：</label>
+    <select id="chapterSelect">
+      <option value="all">全部章节</option>
+      <option value="1">第一章 证券市场基本法律法规</option>
+      <option value="2">第二章 证券经营机构管理规范</option>
+      <option value="3">第三章 证券公司业务规范</option>
+      <option value="4">第四章 典型违法违规行为</option>
+      <option value="5">第五章 行业文化与从业规范</option>
+    </select>
+    <label>题型：</label>
+    <select id="typeSelect">
+      <option value="all">全部题型</option>
+      <option value="single">单选题</option>
+      <option value="multi">多选题</option>
+      <option value="tf">判断题</option>
+    </select>
+    <button class="primary" onclick="startQuiz()">🔄 开始/重置</button>
+    <button onclick="toggleOrder()">🔀 <span id="orderLabel">顺序</span></button>
+    <div class="stats">
+      进度：<span id="progress">0</span> / <span id="total">0</span>
+      正确率：<span id="accuracy">0</span>%
+    </div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="quiz-area" id="quizArea"></div>
+
+  <div class="footer">
+    <div class="footer-left">
+      <a href="https://github.com/ZW471" target="_blank" rel="noopener">
+        <svg class="gh-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        ZW471/securities-exam-practice
+      </a>
+      <a class="star-btn" href="https://github.com/ZW471/securities-exam-practice" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/></svg>
+        Star
+      </a>
+      <span class="save-indicator" id="saveIndicator">已自动保存</span>
+    </div>
+    <div class="footer-right">
+      <button onclick="exportAnswers()" title="导出答题记录为JSON文件">📤 导出记录</button>
+      <button onclick="document.getElementById('importFile').click()" title="导入答题记录JSON文件">📥 导入记录</button>
+      <button onclick="clearSavedData()" title="清除所有本地保存的答题数据">🗑️ 清除记录</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importAnswers(event)">
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ 题库 ============
+const questionBank = [
+  // ===== 第一章 证券市场基本法律法规 (Q1-Q60) =====
+  // 公司法 (Q1-Q15)
+  {ch:1, type:'single', q:'有限责任公司的股东人数上限为（  ）。', opts:['A. 20人','B. 30人','C. 50人','D. 200人'], ans:[2], exp:'有限责任公司股东人数为1-50人。'},
+  {ch:1, type:'single', q:'股份有限公司的发起人人数不得超过（  ）。', opts:['A. 50人','B. 100人','C. 200人','D. 300人'], ans:[2], exp:'设立股份有限公司，应当有1人以上200人以下为发起人，其中须有半数以上的发起人在中国境内有住所。'},
+  {ch:1, type:'single', q:'股份有限公司董事会成员人数为（  ）。', opts:['A. 3-13人','B. 5-19人','C. 5-17人','D. 3-19人'], ans:[1], exp:'股份有限公司设董事会，成员为5-19人。有限责任公司设董事会，成员为3-13人。'},
+  {ch:1, type:'single', q:'监事会中职工代表的比例不得低于（  ）。', opts:['A. 1/4','B. 1/3','C. 1/2','D. 2/3'], ans:[1], exp:'监事会应当包括职工代表，其比例不得低于三分之一。'},
+  {ch:1, type:'single', q:'公司以超过股票票面金额的发行价格发行股份所得的溢价款应当列为公司的（  ）。', opts:['A. 资本公积金','B. 任意公积金','C. 股本溢价','D. 法定公积金'], ans:[0], exp:'公司以超过股票票面金额的发行价格发行股份所得的溢价款、发行无面额股份所得股款未计入注册资本的金额以及国务院财政部门规定列入资本公积金的其他项目，应当列为公司资本公积金。'},
+  {ch:1, type:'multi', q:'下列属于公司高级管理人员的有（  ）。', opts:['A. 经理','B. 副经理','C. 财务负责人','D. 监事长'], ans:[0,1,2], exp:'高级管理人员是指公司的经理、副经理、财务负责人，上市公司董事会秘书和公司章程规定的其他人员。监事长属于监事会成员。'},
+  {ch:1, type:'tf', q:'有限责任公司的公司章程应当载明设立方式。', opts:['A. 正确','B. 错误'], ans:[1], exp:'设立方式不属于有限责任公司章程必须载明的事项，它是股份有限公司章程需要载明的事项（如发起设立或募集设立）。'},
+  {ch:1, type:'single', q:'国有独资公司、国有控股公司、国有参股公司是按照（  ）标准进行划分。', opts:['A. 国有出资比例','B. 股东出资方式','C. 投资者出资额','D. 注册方式'], ans:[0], exp:'依公司是否有国有资本及其所占比重，可分为国有独资公司、国有控股公司、国有参股公司、非国有公司等。'},
+  {ch:1, type:'single', q:'虚报注册资本的，由公司登记机关处以虚报注册资金额（  ）的罚款。', opts:['A. 1%-10%','B. 5%-15%','C. 10%-20%','D. 5%-10%'], ans:[1], exp:'虚报注册资本的，由公司登记机关责令改正，处以虚报注册金额5%-15%的罚款。'},
+  {ch:1, type:'single', q:'欺诈取得公司登记，情节严重的，（  ）。', opts:['A. 责令改正','B. 吊销营业执照','C. 罚款5-200万','D. 以上都是'], ans:[1], exp:'欺诈取得公司登记，情节严重的，吊销营业执照，并对责任人处以3-30万罚款。'},
+  {ch:1, type:'multi', q:'公司章程应当载明的事项包括（  ）。', opts:['A. 公司名称和住所','B. 公司经营范围','C. 公司注册资本','D. 公司法定代表人'], ans:[0,1,2,3], exp:'以上均为有限责任公司章程应当载明的事项。'},
+  {ch:1, type:'single', q:'有限责任公司股东向股东以外的人转让股权，应当经其他股东过半数同意。其他股东不同意的，不同意的股东应当（  ）。', opts:['A. 放弃优先购买权','B. 购买该转让的股权','C. 书面通知公司','D. 申请仲裁'], ans:[1], exp:'不同意转让的股东应当购买该转让的股权，不购买的视为同意转让。'},
+  {ch:1, type:'tf', q:'公司分配当年税后利润时，应当提取利润的20%列入公司法定公积金。', opts:['A. 正确','B. 错误'], ans:[1], exp:'公司分配当年税后利润时，应当提取利润的10%列入公司法定公积金。公司法定公积金累计额为公司注册资本的50%以上的，可以不再提取。'},
+  {ch:1, type:'single', q:'抽逃出资的，由公司登记机关处以所抽逃出资金额（  ）的罚款。', opts:['A. 1%-10%','B. 3%-15%','C. 5%-15%','D. 5%-10%'], ans:[2], exp:'抽逃出资的，由公司登记机关责令改正，处以所抽逃出资金额5%-15%的罚款，对直接负责的主管人员和其他直接责任人员处以3-30万元罚款。'},
+  {ch:1, type:'multi', q:'下列不属于公司高级管理人员的有（  ）。', opts:['A. 副董事长','B. 监事长','C. 人力资源负责人','D. 财务负责人'], ans:[0,1,2], exp:'高级管理人员是指公司的经理、副经理、财务负责人，上市公司董事会秘书和公司章程规定的其他人员。副董事长属于董事会成员，监事长属于监事会成员。'},
+
+  // 合伙企业法 (Q16-Q25)
+  {ch:1, type:'single', q:'有限合伙企业的合伙人人数为（  ）。', opts:['A. 2人以上','B. 2-50名','C. 2-200名','D. 1-50名'], ans:[1], exp:'有限合伙企业由2-50名合伙人设立，至少应当有1名普通合伙人。'},
+  {ch:1, type:'single', q:'有限合伙企业由（  ）执行合伙事务。', opts:['A. 全体合伙人','B. 有限合伙人','C. 普通合伙人','D. 合伙人会议'], ans:[2], exp:'有限合伙企业由普通合伙人执行合伙事务。有限合伙人不执行合伙事务，不得对外代表有限合伙企业。'},
+  {ch:1, type:'multi', q:'合伙企业解散的事由包括（  ）。', opts:['A. 合伙期限届满，合伙人决定不再经营','B. 全体合伙人决定解散','C. 合伙人已不具备法定人数满30天','D. 合伙协议约定的解散事由出现'], ans:[0,1,2,3], exp:'以上均为合伙企业应当解散的法定情形。'},
+  {ch:1, type:'tf', q:'有限合伙企业仅剩有限合伙人的，应当解散。', opts:['A. 正确','B. 错误'], ans:[0], exp:'有限合伙企业仅剩有限合伙人的，应当解散；仅剩普通合伙人的，转为普通合伙企业。'},
+  {ch:1, type:'single', q:'合伙企业的清算人应当自被确定之日起（  ）内将清算事由通知债权人。', opts:['A. 10日','B. 15日','C. 20日','D. 30日'], ans:[0], exp:'清算人应当自被确定之日起10日内将合伙企业解散事项通知债权人，并于60日内在报纸上公告。'},
+  {ch:1, type:'tf', q:'普通合伙人转变为有限合伙人的，对其作为普通合伙人期间的债务承担无限连带责任。', opts:['A. 正确','B. 错误'], ans:[0], exp:'普通合伙人转变为有限合伙人的，对其作为普通合伙人期间合伙企业发生的债务承担无限连带责任。'},
+  {ch:1, type:'single', q:'合伙企业注销后，原普通合伙人对合伙企业存续期间的债务（  ）。', opts:['A. 不再承担责任','B. 仍应承担无限连带责任','C. 以出资额为限','D. 承担有限责任'], ans:[1], exp:'合伙企业注销后，原普通合伙人对合伙企业存续期间的债务仍应承担无限连带责任。'},
+  {ch:1, type:'multi', q:'根据合伙人对合伙企业债务承担责任的不同，合伙企业可分为（  ）。', opts:['A. 有限合伙企业','B. 普通合伙企业','C. 人合合伙企业','D. 资合合伙企业'], ans:[0,1], exp:'根据合伙人对合伙企业债务承担责任的不同，合伙企业可分为普通合伙企业和有限合伙企业。'},
+  {ch:1, type:'single', q:'新合伙人入伙，除合伙协议另有约定外，应当经（  ）同意。', opts:['A. 全体合伙人一致','B. 过半数合伙人','C. 三分之二以上合伙人','D. 执行事务合伙人'], ans:[0], exp:'新合伙人入伙，除合伙协议另有约定外，应当经全体合伙人一致同意，并依法订立书面入伙协议。'},
+  {ch:1, type:'tf', q:'有限合伙人可以对外代表有限合伙企业。', opts:['A. 正确','B. 错误'], ans:[1], exp:'有限合伙人不执行合伙事务，不得对外代表有限合伙企业。'},
+
+  // 证券法 (Q26-Q50)
+  {ch:1, type:'single', q:'证券的发行、交易活动必须实行（  ）的原则。', opts:['A. 公开、公平、公正','B. 自愿、有偿、诚实信用','C. 合法、合规、公正','D. 真实、准确、完整'], ans:[0], exp:'证券的发行、交易活动，必须实行公开、公平、公正的"三公"原则。'},
+  {ch:1, type:'single', q:'向特定对象发行证券累计超过（  ）人的，为公开发行。', opts:['A. 100','B. 150','C. 200','D. 300'], ans:[2], exp:'向特定对象发行证券累计超过200人的（但依法实施员工持股计划的员工人数不计算在内），为公开发行。'},
+  {ch:1, type:'single', q:'证券承销的期限不得超过（  ）日。', opts:['A. 30','B. 60','C. 90','D. 120'], ans:[2], exp:'证券承销业务采取代销或包销方式，期限不超过90日。'},
+  {ch:1, type:'single', q:'股票发行采用代销方式，代销期限届满，向投资者出售的股票数量未达到拟公开发行股票数量的（  ）的，为发行失败。', opts:['A. 50%','B. 60%','C. 70%','D. 80%'], ans:[2], exp:'代销期限届满，向投资者出售的股票数量未达到拟公开发行股票数量70%的，为发行失败。'},
+  {ch:1, type:'single', q:'证券交易当事人依法买卖的证券，必须是（  ）。', opts:['A. 依法发行并交付的证券','B. 依法上市的证券','C. 经证监会核准的证券','D. 在交易所挂牌的证券'], ans:[0], exp:'证券交易当事人依法买卖的证券，必须是依法发行并交付的证券。'},
+  {ch:1, type:'multi', q:'下列属于证券交易内幕信息知情人的有（  ）。', opts:['A. 发行人及其董事、监事、高管','B. 持有公司5%以上股份的股东','C. 持有公司3%股份的股东','D. 因职务可以获取内幕信息的证券交易所有关人员'], ans:[0,1,3], exp:'持有公司5%以上股份的股东及其董事、监事、高管属于知情人，3%不满足标准。'},
+  {ch:1, type:'single', q:'收购要约的收购期限不得少于（  ）日，并不得超过（  ）日。', opts:['A. 15，30','B. 30，60','C. 30，90','D. 60，90'], ans:[1], exp:'收购要约约定的收购期限不得少于30日，并不得超过60日。'},
+  {ch:1, type:'single', q:'投资者持有一个上市公司已发行的有表决权股份达到（  ）时，应当在3日内报告并公告。', opts:['A. 3%','B. 5%','C. 10%','D. 15%'], ans:[1], exp:'投资者持有一个上市公司已发行的有表决权股份达到5%时，应当在该事实发生之日起3日内，向国务院证券监管机构、证券交易所作出书面报告，通知该上市公司，并予公告。'},
+  {ch:1, type:'single', q:'违反规定买入的，在买入后的（  ）个月内，对超过规定比例部分的股份不得行使表决权。', opts:['A. 12','B. 18','C. 24','D. 36'], ans:[3], exp:'违反规定买入的，在买入后的36个月内，对超过规定比例部分的股份不得行使表决权。'},
+  {ch:1, type:'single', q:'上市公司收购行为完成后，收购人持有的被收购上市公司的股票，在收购行为完成后的（  ）个月内不得转让。', opts:['A. 6','B. 12','C. 18','D. 24'], ans:[2], exp:'在上市公司收购中，收购人持有的被收购的上市公司的股票，在收购行为完成后的18个月内不得转让。'},
+  {ch:1, type:'single', q:'收购行为完成后，收购人应当在（  ）日内将收购情况报告。', opts:['A. 5','B. 10','C. 15','D. 20'], ans:[2], exp:'收购行为完成后，收购人应当在15日内将收购情况报告国务院证券监管机构和证券交易所，并予公告。'},
+  {ch:1, type:'single', q:'上市公司年度报告应当在每一会计年度结束之日起（  ）内公布。', opts:['A. 2个月','B. 3个月','C. 4个月','D. 6个月'], ans:[2], exp:'年度报告在每一会计年度结束之日起4个月内公布，应当审计。'},
+  {ch:1, type:'single', q:'上市公司中期报告应当在每一会计年度的上半年结束之日起（  ）内公布。', opts:['A. 1个月','B. 2个月','C. 3个月','D. 4个月'], ans:[1], exp:'中期报告在每一会计年度的上半年结束之日起2个月内公布。'},
+  {ch:1, type:'multi', q:'下列属于操纵证券市场行为的有（  ）。', opts:['A. 利用资金优势联合或连续买卖','B. 与他人串通以事先约定的时间和方式相互进行证券交易','C. 在自己实际控制的账户之间进行证券交易','D. 频繁或大量申报并撤销申报'], ans:[0,1,2,3], exp:'以上均为《证券法》规定的操纵证券市场的行为。'},
+  {ch:1, type:'tf', q:'非公开发行证券的，不得采用广告、公开劝诱和变相公开方式。', opts:['A. 正确','B. 错误'], ans:[0], exp:'非公开发行证券的，不得采用广告、公开劝诱和变相公开方式。'},
+  {ch:1, type:'single', q:'证券交易所的总经理由（  ）任免。', opts:['A. 证券交易所会员大会','B. 证券交易所理事会','C. 国务院证券监管机构','D. 国务院'], ans:[2], exp:'证券交易所设总经理1人，由国务院证券监管机构任免。'},
+  {ch:1, type:'single', q:'证券登记结算机构应当向证券发行人提供证券持有人名册及有关资料，其保存期限不得少于（  ）年。', opts:['A. 10','B. 15','C. 20','D. 25'], ans:[2], exp:'证券登记结算机构应当向证券发行人提供证券持有人名册及有关资料，其保存期限不得少于20年。'},
+  {ch:1, type:'single', q:'根据证券法，证券发行、交易活动的当事人应当遵守的原则不包括（  ）。', opts:['A. 诚实信用','B. 自愿','C. 有偿','D. 稳健'], ans:[3], exp:'证券发行、交易活动的当事人具有平等的法律地位，应当遵守自愿、有偿、诚实信用的原则（不包括稳健）。'},
+  {ch:1, type:'multi', q:'根据《证券法》，证券的发行、交易活动必须遵守法律、行政法规，禁止行为有（  ）。', opts:['A. 欺诈','B. 内幕交易','C. 获取利益','D. 操纵证券市场'], ans:[0,1,3], exp:'禁止欺诈、内幕交易和操纵证券市场的行为。获取利益是证券交易的正常目的。'},
+  {ch:1, type:'single', q:'公司首次公开发行新股，最近3年财务会计报告应当被出具（  ）审计报告。', opts:['A. 标准无保留意见','B. 无保留意见','C. 带强调事项段的无保留意见','D. 保留意见'], ans:[1], exp:'公司首次公开发行新股，最近3年财务会计报告被出具无保留意见审计报告。'},
+  {ch:1, type:'multi', q:'证券公司承销证券，不得有（  ）。', opts:['A. 虚假或误导投资者的广告宣传','B. 以不正当竞争手段招揽承销业务','C. 其他违反证券承销业务规定的行为','D. 以代销方式进行承销'], ans:[0,1,2], exp:'证券承销分为代销和包销，以代销方式承销是合法的，不属于禁止行为。'},
+  {ch:1, type:'tf', q:'未经证券交易所许可，任何单位和个人不得发布证券交易即时行情。', opts:['A. 正确','B. 错误'], ans:[0], exp:'证券交易即时行情的权益由证券交易所依法享有。未经证券交易所许可，任何单位和个人不得发布证券交易即时行情。'},
+  {ch:1, type:'single', q:'上市公司董事会、独立董事、持有（  ）以上有表决权股份的股东可以作为征集人。', opts:['A. 0.5%','B. 1%','C. 3%','D. 5%'], ans:[1], exp:'上市公司董事会、独立董事、持有1%以上有表决权股份的股东或者依照法律法规或国务院证监会的规定设立的投资者保护机构，可以作为征集人。'},
+  {ch:1, type:'single', q:'公开发行公司债券筹集的资金，不得用于（  ）。', opts:['A. 扩大生产经营','B. 偿还债务','C. 弥补亏损和非生产性支出','D. 投资项目建设'], ans:[2], exp:'公开发行公司债券筹集的资金，不得用于弥补亏损和非生产性支出。'},
+  {ch:1, type:'tf', q:'改变公开发行股票所募集资金的用途，必须经股东会作出决议。', opts:['A. 正确','B. 错误'], ans:[0], exp:'公司对公开发行股票所募集资金，必须按照招股说明书所列资金用途使用；改变资金用途，必须经股东会作出决议。'},
+
+  // 基金法 (Q51-Q55)
+  {ch:1, type:'single', q:'设立基金管理公司的注册资本不低于（  ），且必须为实缴货币资本。', opts:['A. 5000万元','B. 1亿元','C. 2亿元','D. 5亿元'], ans:[1], exp:'设立基金管理公司，注册资本不低于1亿元人民币，且必须为实缴货币资本。'},
+  {ch:1, type:'multi', q:'基金财产的独立性体现在（  ）。', opts:['A. 独立于基金管理人固有财产','B. 独立于基金托管人固有财产','C. 管理人清算时不属于清算财产','D. 不同基金财产的债权债务不得相互抵销'], ans:[0,1,2,3], exp:'以上均为基金财产独立性的体现。'},
+  {ch:1, type:'single', q:'非公开募集基金管理人的登记手续，中国基金业协会应当自收齐登记材料之日起（  ）个工作日内办结。', opts:['A. 10','B. 15','C. 20','D. 30'], ans:[2], exp:'中国基金业协会应当自收齐登记材料之日起20个工作日内办结登记手续。'},
+  {ch:1, type:'tf', q:'基金管理人的民事赔偿责任和缴纳的罚款、罚金，由基金财产承担。', opts:['A. 正确','B. 错误'], ans:[1], exp:'基金管理人、基金托管人、基金服务机构依照法律法规规定，应当承担的民事赔偿责任和缴纳的罚款、罚金，由其固有财产承担（不是基金财产）。'},
+  {ch:1, type:'single', q:'私募基金的合格投资者中，自然人家庭金融净资产应当不低于（  ）。', opts:['A. 100万','B. 200万','C. 300万','D. 500万'], ans:[2], exp:'个人投资者具有2年以上投资经历，且满足家庭金融净资产不低于300万元的条件。'},
+
+  // 期货法 (Q56-Q58)
+  {ch:1, type:'tf', q:'期货交易可以在期货交易场所之外进行。', opts:['A. 正确','B. 错误'], ans:[1], exp:'禁止在期货交易场所之外进行期货交易。'},
+  {ch:1, type:'single', q:'证券金融公司向证券公司转融通的期限不得超过（  ）。', opts:['A. 3个月','B. 6个月','C. 9个月','D. 12个月'], ans:[1], exp:'证券金融公司向证券公司转融通的期限不得超过6个月。'},
+  {ch:1, type:'multi', q:'期货交易的基本制度包括（  ）。', opts:['A. 账户实名制','B. 保证金制度','C. 持仓限额制度','D. 程序化交易报备'], ans:[0,1,2,3], exp:'期货交易实行账户实名制、保证金制度、持仓限额制度、实际控制关系报备和程序化交易报备等制度。'},
+
+  // 证券公司条例 (Q59-Q60)
+  {ch:1, type:'single', q:'证券公司的股东非货币财产出资总额不得超过证券公司注册资本的（  ）。', opts:['A. 20%','B. 30%','C. 40%','D. 50%'], ans:[1], exp:'证券公司股东的非货币财产出资总额不得超过证券公司注册资本的30%。'},
+  {ch:1, type:'single', q:'证券公司经营证券经纪业务、投资咨询和财务顾问业务的，注册资本最低限额为（  ）。', opts:['A. 1000万','B. 5000万','C. 1亿','D. 5亿'], ans:[1], exp:'经营经纪业务、投资咨询、财务顾问3项，注册资本最低5000万元。'},
+
+  // ===== 第二章 证券经营机构管理规范 (Q61-Q105) =====
+  {ch:2, type:'single', q:'证券公司内部控制的基本原则不包括（  ）。', opts:['A. 健全','B. 合理','C. 制衡','D. 效率'], ans:[3], exp:'内部控制基本原则为健全、合理、制衡、独立。'},
+  {ch:2, type:'single', q:'证券公司分类评价的基准分为（  ）分。', opts:['A. 80','B. 90','C. 100','D. 120'], ans:[2], exp:'正常经营的证券公司基准分为100分。'},
+  {ch:2, type:'single', q:'证券公司评价计分低于60分的，评为（  ）类。', opts:['A. C','B. CC','C. D','D. E'], ans:[2], exp:'D类证券公司评价计分低于60分。E类为已被采取风险处置措施的，评价计分为0分。'},
+  {ch:2, type:'single', q:'证券公司合规部门中具备3年以上相关工作经历的合规管理人员数量不得低于公司总部人数的（  ），且不得少于（  ）人。', opts:['A. 1%，3','B. 1.5%，5','C. 2%，5','D. 2.5%，8'], ans:[1], exp:'合规管理人员数量不得低于公司总部人数的1.5%，且不得少于5人。'},
+  {ch:2, type:'multi', q:'证券公司合规管理的职责层级从高到低依次为（  ）。', opts:['A. 董事会','B. 监事会','C. 经营管理主要负责人','D. 其他工作人员'], ans:[0,1,2,3], exp:'合规管理职责从高到低为：董事会→监事会→经营管理主要负责人→其他高管→下属单位负责人→其他工作人员。'},
+  {ch:2, type:'single', q:'证券公司风险管理部门具备3年以上相关领域工作经历的人员占公司总部员工比例应不低于（  ）。', opts:['A. 1%','B. 1.5%','C. 2%','D. 2.5%'], ans:[2], exp:'风险管理部门人员占比应不低于2%。'},
+  {ch:2, type:'single', q:'证券公司风险覆盖率的最低标准为（  ）。', opts:['A. 80%','B. 90%','C. 100%','D. 120%'], ans:[2], exp:'风险覆盖率=净资本/各项风险资本准备之和×100%，持续复合标准≥100%。'},
+  {ch:2, type:'single', q:'证券公司资本杠杆率的最低标准为（  ）。', opts:['A. 4%','B. 6%','C. 8%','D. 10%'], ans:[2], exp:'资本杠杆率=核心净资本/表内外资产总额×100%，持续复合标准≥8%。'},
+  {ch:2, type:'single', q:'净资本等风控指标达预警标准的，证券公司应在（  ）个工作日内报告。', opts:['A. 1','B. 2','C. 3','D. 5'], ans:[2], exp:'净资本等风控指标达预警标准的，应在3个工作日内报告证监会及其派出机构。'},
+  {ch:2, type:'single', q:'净资本等风控指标不合格的，证券公司应在（  ）个工作日内报告。', opts:['A. 1','B. 2','C. 3','D. 5'], ans:[0], exp:'净资本等风控指标不合格的，应在1个工作日内报告证监会及其派出机构。'},
+  {ch:2, type:'tf', q:'证券公司的流动性风险压力测试应当至少每半年开展一次。', opts:['A. 正确','B. 错误'], ans:[0], exp:'证券公司应至少每半年开展一次流动性风险压力测试。'},
+  {ch:2, type:'single', q:'操作风险一般包括法律风险，但不包括（  ）。', opts:['A. 信用风险和市场风险','B. 战略风险和声誉风险','C. 流动性风险','D. 合规风险'], ans:[1], exp:'操作风险一般包括法律风险，但不包括战略风险和声誉风险。'},
+  {ch:2, type:'multi', q:'声誉风险管理应遵循的原则包括（  ）。', opts:['A. 全程全员原则','B. 预防第一原则','C. 审慎管理原则','D. 快速响应原则'], ans:[0,1,2,3], exp:'声誉风险管理应遵循全程全员原则、预防第一原则、审慎管理原则、快速响应原则。'},
+  {ch:2, type:'single', q:'专业投资者中，法人或其他组织最近1年末净资产不低于（  ）。', opts:['A. 500万','B. 1000万','C. 2000万','D. 5000万'], ans:[2], exp:'符合条件的专业投资者（第二类）法人或其他组织：最近1年末净资产不低于2000万元。'},
+  {ch:2, type:'single', q:'专业投资者中，自然人金融资产不低于（  ）。', opts:['A. 100万','B. 300万','C. 500万','D. 1000万'], ans:[2], exp:'符合条件的专业投资者（第二类）自然人：金融资产不低于500万元，或者最近3年个人年均收入不低于50万元。'},
+  {ch:2, type:'single', q:'投资者适当性管理的匹配方案、录音录像等资料保存期限不得少于（  ）年。', opts:['A. 5','B. 10','C. 15','D. 20'], ans:[3], exp:'匹配方案、告知警示资料、录音录像资料、自查报告等的保存期限不得少于20年。'},
+  {ch:2, type:'single', q:'反洗钱客户身份资料的保存期限为自业务关系结束后至少保存（  ）年。', opts:['A. 5','B. 10','C. 15','D. 20'], ans:[1], exp:'客户身份资料，自业务关系结束后或者一次性金融服务结束后至少保存10年。'},
+  {ch:2, type:'single', q:'对于新建立业务关系的客户，证券公司应在建立业务关系后的（  ）个工作日内划分其风险等级。', opts:['A. 5','B. 10','C. 15','D. 20'], ans:[1], exp:'对于新建立业务关系的客户，证券公司应在建立业务关系后的10个工作日内，划分其风险等级。'},
+  {ch:2, type:'single', q:'证券公司首席信息官应从事信息技术相关工作（  ）年以上。', opts:['A. 5','B. 8','C. 10','D. 15'], ans:[2], exp:'首席信息官应从事信息技术相关工作10年以上，或者在证券监管机构、证券基金业自律组织任职8年以上。'},
+  {ch:2, type:'single', q:'证券公司应委托外部专业机构开展信息技术管理工作全面审计，频率不低于每（  ）年一次。', opts:['A. 1','B. 2','C. 3','D. 5'], ans:[2], exp:'应当委托外部专业机构开展信息技术管理工作的全面审计，频率不低于每3年一次。'},
+  {ch:2, type:'single', q:'重要信息系统应当每天至少备份数据（  ）次。', opts:['A. 1','B. 2','C. 3','D. 4'], ans:[0], exp:'重要信息系统应当每天至少备份数据一次。'},
+  {ch:2, type:'single', q:'证券经纪人执业前培训时间不少于（  ）小时。', opts:['A. 20','B. 40','C. 60','D. 80'], ans:[2], exp:'证券公司应当对证券经纪人进行不少于60个小时的执业前培训。'},
+  {ch:2, type:'single', q:'同一客户最多可以开立（  ）个同名资金账户。', opts:['A. 3','B. 4','C. 5','D. 6'], ans:[2], exp:'同一客户最多开立5个同名资金账户。'},
+  {ch:2, type:'single', q:'1个投资者在同一市场最多可以申请开立（  ）个A股账户。', opts:['A. 1','B. 2','C. 3','D. 5'], ans:[2], exp:'1个投资者在同一市场最多可以申请开立3个A股账户。'},
+  {ch:2, type:'single', q:'A股、证券投资基金每笔交易佣金不足（  ）元的，按（  ）元收取。', opts:['A. 3，3','B. 5，5','C. 10，10','D. 20，20'], ans:[1], exp:'A股、证券投资基金每笔交易佣金不足5元的，按5元收取。'},
+  {ch:2, type:'single', q:'证券经纪商向客户收取的佣金不得高于证券交易金额的（  ）。', opts:['A. 0.1%','B. 0.2%','C. 0.3%','D. 0.5%'], ans:[2], exp:'佣金不得高于证券交易金额的0.3%。'},
+  {ch:2, type:'single', q:'科创板和创业板的涨跌幅限制为（  ）。', opts:['A. 10%','B. 15%','C. 20%','D. 30%'], ans:[2], exp:'科创板和创业板放宽涨跌幅限制至20%。'},
+  {ch:2, type:'multi', q:'证券投资顾问与发布证券研究报告的区别体现在（  ）。', opts:['A. 服务对象','B. 立场','C. 对证券定价的影响','D. 关注内容'], ans:[0,1,2,3], exp:'两者在立场、服务方式和内容、服务对象、市场影响等方面均有区别。'},
+  {ch:2, type:'single', q:'不得担任财务顾问的情形中，最近（  ）个月内因违法违规经营受到处罚的不得担任。', opts:['A. 12','B. 24','C. 36','D. 48'], ans:[2], exp:'最近36个月内因违法违规经营受到处罚或者因涉嫌违法违规经营正在被调查的，不得担任财务顾问。'},
+  {ch:2, type:'single', q:'财务顾问应当指定（  ）名财务顾问主办人负责。', opts:['A. 1','B. 2','C. 3','D. 4'], ans:[1], exp:'应当指定2名财务顾问主办人负责，同时可以安排1名项目协办人参与。'},
+  {ch:2, type:'single', q:'保荐机构从业人员不少于（  ）人。', opts:['A. 20','B. 25','C. 30','D. 35'], ans:[3], exp:'保荐机构从业人员不少于35人，其中最近3年从事保荐相关业务的人员不少于20人。'},
+  {ch:2, type:'single', q:'保荐代表人不少于（  ）人。', opts:['A. 2','B. 3','C. 4','D. 5'], ans:[2], exp:'保荐代表人不少于4人。'},
+  {ch:2, type:'single', q:'联合保荐的保荐机构不得超过（  ）家。', opts:['A. 1','B. 2','C. 3','D. 4'], ans:[1], exp:'联合保荐的保荐机构不得超过2家。'},
+  {ch:2, type:'single', q:'科创板IPO的持续督导期间为证券上市当年剩余时间及其后（  ）个完整会计年度。', opts:['A. 1','B. 2','C. 3','D. 4'], ans:[2], exp:'创业板、科创板、北交所IPO的持续督导期间为上市当年+3个完整会计年度。'},
+  {ch:2, type:'single', q:'融资融券客户从事证券交易的时间应连续计算满（  ）以上。', opts:['A. 3个月','B. 半年','C. 1年','D. 2年'], ans:[1], exp:'客户从事证券交易的时间应连续计算满半年以上。'},
+  {ch:2, type:'single', q:'融资融券客户近20个交易日日均证券类资产不低于（  ）万元。', opts:['A. 10','B. 30','C. 50','D. 100'], ans:[2], exp:'近20个交易日日均证券类资产不低于50万元。'},
+  {ch:2, type:'single', q:'融资保证金比例不得低于（  ）。', opts:['A. 50%','B. 60%','C. 80%','D. 100%'], ans:[2], exp:'投资者融资买入证券时，融资保证金比例不得低于80%。'},
+  {ch:2, type:'single', q:'融券保证金比例不得低于（  ）。', opts:['A. 50%','B. 80%','C. 100%','D. 120%'], ans:[2], exp:'投资者融券卖出时，融券保证金比例不得低于100%。'},
+  {ch:2, type:'single', q:'维持担保比例超过（  ）时客户可以提取保证金可用余额。', opts:['A. 150%','B. 200%','C. 250%','D. 300%'], ans:[3], exp:'维持担保比例超过300%时，客户可以提取，但提取后不得低于300%。'},
+  {ch:2, type:'single', q:'ETF作为融资融券标的需满足最近5个交易日内的日平均资产规模不低于（  ）亿元。', opts:['A. 1','B. 3','C. 5','D. 10'], ans:[2], exp:'ETF作为融资融券标的需满足最近5个交易日内的日平均资产规模不低于5亿元。'},
+  {ch:2, type:'single', q:'自营权益类证券及衍生品的合计额不得超过净资本的（  ）。', opts:['A. 50%','B. 80%','C. 100%','D. 150%'], ans:[2], exp:'自营权益类证券及衍生品的合计额不得超过净资本的100%。'},
+  {ch:2, type:'single', q:'持有一种权益类证券的成本不得超过净资本的（  ）。', opts:['A. 10%','B. 20%','C. 30%','D. 50%'], ans:[2], exp:'持有一种权益类证券的成本不得超过净资本的30%。'},
+  {ch:2, type:'single', q:'持有一种权益类证券的市值与其总市值的比例不得超过（  ）。', opts:['A. 3%','B. 5%','C. 8%','D. 10%'], ans:[1], exp:'持有一种权益类证券的市值与其总市值的比例不得超过5%。'},
+  {ch:2, type:'single', q:'封闭式资产管理产品期限不得低于（  ）天。', opts:['A. 30','B. 60','C. 90','D. 120'], ans:[2], exp:'封闭式资产管理产品期限不得低于90天。'},
+  {ch:2, type:'single', q:'权益类资管产品的分级比例不得超过（  ）。', opts:['A. 1:1','B. 2:1','C. 3:1','D. 5:1'], ans:[0], exp:'权益类产品分级比例不得超过1:1。'},
+
+  // ===== 第三章 证券公司业务规范 (Q106-Q120) =====
+  {ch:3, type:'single', q:'每家证券公司设立另类投资子公司原则上不超过（  ）家。', opts:['A. 1','B. 2','C. 3','D. 5'], ans:[0], exp:'每家证券公司设立另类投资子公司原则上不超过1家。'},
+  {ch:3, type:'tf', q:'另类投资子公司可以对外提供担保和贷款。', opts:['A. 正确','B. 错误'], ans:[1], exp:'另类子公司不得融资，不得对外提供担保和贷款。'},
+  {ch:3, type:'single', q:'场外衍生品交易中，一级交易商的分类评级应在（  ）级以上。', opts:['A. A','B. AA','C. AAA','D. BBB'], ans:[1], exp:'一级交易商最近一年分类评级在A类AA级以上。'},
+  {ch:3, type:'single', q:'二级交易商仅能与（  ）进行场内个股对冲交易。', opts:['A. 客户','B. 一级交易商','C. 证券交易所','D. 其他二级交易商'], ans:[1], exp:'二级交易商仅能与一级交易商进行场内个股对冲交易。'},
+  {ch:3, type:'single', q:'另类子公司应于每月结束后（  ）个工作日内报送月度报表。', opts:['A. 5','B. 7','C. 10','D. 15'], ans:[2], exp:'另类子公司应于每月结束后10个工作日内报送月度报表。'},
+  {ch:3, type:'tf', q:'期货公司可以以自有资金参与股票期权交易。', opts:['A. 正确','B. 错误'], ans:[1], exp:'期货公司不得以自有资金参与股票期权交易试点。'},
+  {ch:3, type:'single', q:'股票期权交易实行（  ）制度。', opts:['A. T+0','B. 当日无负债结算','C. 净额结算','D. 逐笔结算'], ans:[1], exp:'股票期权交易实行当日无负债结算制度。'},
+  {ch:3, type:'single', q:'单一证券公司接受单只A股股票质押的数量不得超过该股票A股股本的（  ）。', opts:['A. 10%','B. 20%','C. 30%','D. 50%'], ans:[2], exp:'单一证券公司接受单只A股股票质押的数量不得超过该股票A股股本的30%。'},
+  {ch:3, type:'single', q:'单只A股股票市场整体质押比例不得超过（  ）。', opts:['A. 30%','B. 40%','C. 50%','D. 60%'], ans:[2], exp:'单只A股股票市场整体质押比例不得超过50%。'},
+  {ch:3, type:'multi', q:'证券公司代销金融产品不得（  ）。', opts:['A. 夸大宣传误导客户','B. 以回扣方式诱导客户','C. 与客户分享投资收益','D. 用非专用存款账户接收客户资金'], ans:[0,1,2,3], exp:'以上均为证券公司代销金融产品的禁止行为。'},
+  {ch:3, type:'single', q:'资管产品可以再投资（  ）层资管产品。', opts:['A. 一','B. 二','C. 三','D. 不限'], ans:[0], exp:'资管产品可以再投资一层资管产品，但所投资的资管产品不得再投资公募证券投资基金以外的资管产品。'},
+  {ch:3, type:'single', q:'证券公司自有资金参与集合资管计划的持有期限不得少于（  ）个月。', opts:['A. 3','B. 6','C. 9','D. 12'], ans:[1], exp:'证券公司自有资金参与集合资管计划的持有期限不得少于6个月。'},
+  {ch:3, type:'tf', q:'集合资管计划存续期间，持续5个工作日投资者少于2人的，应当终止。', opts:['A. 正确','B. 错误'], ans:[0], exp:'集合资管计划存续期间，持续5个工作日投资者少于2人的，应当终止。'},
+  {ch:3, type:'single', q:'资产支持证券初始挂牌交易单位所对应的发行面值不少于（  ）万元。', opts:['A. 50','B. 80','C. 100','D. 200'], ans:[2], exp:'资产支持证券初始挂牌交易单位所对应的发行面值不少于100万元。'},
+  {ch:3, type:'single', q:'全国股转系统每年设置（  ）次创新层进层实施安排。', opts:['A. 2','B. 4','C. 6','D. 12'], ans:[2], exp:'全国股转系统每年设置6次创新层进层实施安排。'},
+
+  // ===== 第四章 典型违法违规行为 (Q121-Q135) =====
+  {ch:4, type:'single', q:'欺诈发行股票、债券罪的主观方面为（  ）。', opts:['A. 只能故意','B. 只能过失','C. 故意或过失','D. 间接故意'], ans:[0], exp:'欺诈发行罪主观方面只能由故意构成，过失不构成本罪。'},
+  {ch:4, type:'single', q:'非法吸收公众存款罪的最高刑期为（  ）。', opts:['A. 5年','B. 7年','C. 10年以上','D. 无期'], ans:[2], exp:'数额特别巨大或有其他特别严重情节的，处10年以上有期徒刑。'},
+  {ch:4, type:'single', q:'集资诈骗罪的最高刑期为（  ）。', opts:['A. 10年','B. 15年','C. 无期徒刑','D. 死刑'], ans:[2], exp:'数额巨大或有其他严重情节的，处7年以上有期徒刑或者无期徒刑。'},
+  {ch:4, type:'single', q:'集资诈骗与非法吸收公众存款的主要区别在于是否以（  ）为目的。', opts:['A. 营利','B. 非法占有','C. 获取利润','D. 经营'], ans:[1], exp:'集资诈骗以非法占有为目的，这是二者的主要区别。'},
+  {ch:4, type:'single', q:'内幕交易罪的最高刑期为（  ）。', opts:['A. 3年','B. 5年','C. 7年','D. 10年'], ans:[3], exp:'情节特别严重的，处5-10年有期徒刑。'},
+  {ch:4, type:'single', q:'操纵证券市场违法所得不足100万元的，处以（  ）万元罚款。', opts:['A. 10-100','B. 50-500','C. 100-1000','D. 200-2000'], ans:[2], exp:'操纵市场无违法所得或不足100万的，处100-1000万元罚款。'},
+  {ch:4, type:'single', q:'诱骗投资者买卖证券、期货合约罪的主体属于（  ）。', opts:['A. 一般主体','B. 特殊主体','C. 单位','D. 自然人'], ans:[1], exp:'主体为特殊主体，包括证券交易所、期货交易所、证券公司等从业人员和监管部门工作人员。'},
+  {ch:4, type:'tf', q:'违规披露、不披露重要信息罪可以由过失构成。', opts:['A. 正确','B. 错误'], ans:[1], exp:'违规披露、不披露重要信息罪只能由故意构成，过失不构成本罪。'},
+  {ch:4, type:'multi', q:'非法集资类犯罪包括（  ）。', opts:['A. 非法吸收公众存款','B. 集资诈骗','C. 内幕交易','D. 操纵市场'], ans:[0,1], exp:'非法集资类犯罪主要包括非法吸收公众存款罪和集资诈骗罪。'},
+  {ch:4, type:'single', q:'背信运用受托财产罪情节严重的，对直接负责人处（  ）年以下有期徒刑。', opts:['A. 1','B. 3','C. 5','D. 7'], ans:[1], exp:'背信运用受托财产罪情节严重的，对直接负责人处3年以下有期徒刑或者拘役。'},
+  {ch:4, type:'single', q:'操纵证券、期货市场罪的主体属于（  ）。', opts:['A. 特殊主体','B. 一般主体','C. 单位','D. 自然人'], ans:[1], exp:'操纵证券、期货市场罪的主体为一般主体。'},
+  {ch:4, type:'single', q:'欺诈发行证券，尚未发行的，处以（  ）万元罚款。', opts:['A. 100-1000','B. 200-2000','C. 50-500','D. 500-5000'], ans:[1], exp:'欺诈发行证券，尚未发行的，处以200-2000万元罚款。'},
+  {ch:4, type:'tf', q:'利用未公开信息交易罪的主体为一般主体。', opts:['A. 正确','B. 错误'], ans:[1], exp:'利用未公开信息交易罪的主体为特殊主体。'},
+  {ch:4, type:'single', q:'擅自公开或变相公开发行证券，处非法募集资金金额（  ）的罚款。', opts:['A. 1%-5%','B. 5%-50%','C. 10%-1倍','D. 1-10倍'], ans:[1], exp:'行政处罚为处非法募集资金5%-50%罚款。'},
+  {ch:4, type:'single', q:'擅自改变公开发行证券募集资金用途未作纠正的，（  ）。', opts:['A. 罚款50-500万','B. 不得公开发行新股','C. 吊销营业执照','D. A和B'], ans:[3], exp:'擅自改变用途未作纠正或未经股东会认可的，不得公开发行新股；并处50-500万罚款。'},
+
+  // ===== 第五章 行业文化与从业规范 (Q136-Q150) =====
+  {ch:5, type:'multi', q:'中国特色金融文化的核心理念包括（  ）。', opts:['A. 诚实守信，不逾越底线','B. 以义取利，不唯利是图','C. 守正创新，不脱实向虚','D. 稳健审慎，不急功近利'], ans:[0,1,2,3], exp:'中国特色金融文化的核心理念包括诚实守信不逾越底线、以义取利不唯利是图、稳健审慎不急功近利、守正创新不脱实向虚、依法合规不胡作非为。'},
+  {ch:5, type:'multi', q:'证券行业文化建设的基本要求包括（  ）。', opts:['A. 合规','B. 诚实守信','C. 专业','D. 稳健'], ans:[0,1,2,3], exp:'六项基本要求：合规、诚实守信、专业、稳健、廉洁自律、社会责任。'},
+  {ch:5, type:'single', q:'证券公司文化建设实践评估每年开展（  ）次。', opts:['A. 1','B. 2','C. 4','D. 不定期'], ans:[0], exp:'证券公司文化建设实践评估每年开展1次。'},
+  {ch:5, type:'single', q:'廉洁从业管理的第一责任人是（  ）。', opts:['A. 董事长','B. 主要负责人','C. 合规负责人','D. 纪检负责人'], ans:[1], exp:'证券经营机构主要负责人是落实廉洁从业管理职责的第一责任人。'},
+  {ch:5, type:'single', q:'廉洁从业风险防控相关底稿保存期限不少于（  ）年。', opts:['A. 3','B. 5','C. 10','D. 20'], ans:[2], exp:'廉洁从业风险防控相关底稿保存期限不少于10年。'},
+  {ch:5, type:'single', q:'证券市场违法失信信息的效力期限为（  ）年。', opts:['A. 1','B. 3','C. 5','D. 10'], ans:[1], exp:'违法失信信息效力期限为3年。但因行政处罚、市场禁入、刑事处罚等的信息效力期限为5年。'},
+  {ch:5, type:'single', q:'因行政处罚或市场禁入等信息的诚信档案效力期限为（  ）年。', opts:['A. 3','B. 5','C. 10','D. 永久'], ans:[1], exp:'因行政处罚、市场禁入、刑事处罚等的信息效力期限为5年。'},
+  {ch:5, type:'single', q:'市场禁入中，情节严重的业务、任职禁入期限为（  ）年。', opts:['A. 1-3','B. 3-5','C. 5-8','D. 6-10'], ans:[1], exp:'情节严重3-5年，情节恶劣6-10年。'},
+  {ch:5, type:'single', q:'交易禁入的期限为（  ）。', opts:['A. 3-5年','B. 6-10年','C. 10年','D. 终身'], ans:[3], exp:'交易禁入的期限为终身。'},
+  {ch:5, type:'single', q:'从业人员条件要求最近（  ）年未因犯罪被判处刑罚。', opts:['A. 1','B. 2','C. 3','D. 5'], ans:[2], exp:'从业人员条件要求最近3年未因犯罪被判处刑罚。'},
+  {ch:5, type:'single', q:'从业人员培训建议不少于（  ）学时。', opts:['A. 10','B. 12','C. 15','D. 20'], ans:[2], exp:'建议不少于15学时，每学时为45分钟。'},
+  {ch:5, type:'single', q:'持续从事证券业务10年以上且无违法失信的从业人员，可减少（  ）学时。', opts:['A. 3','B. 5','C. 8','D. 10'], ans:[1], exp:'持续从事证券业务10年以上且无违法失信的从业人员，可减少5学时。'},
+  {ch:5, type:'tf', q:'证券公司的从业人员可以通过实施股权激励计划持有本公司股票。', opts:['A. 正确','B. 错误'], ans:[0], exp:'实施股权激励计划或者员工持股计划的证券公司的从业人员，可以按照规定持有、卖出本公司股票。'},
+  {ch:5, type:'single', q:'私募资管业务人员递延支付年限原则上不少于（  ）年，递延金额不少于（  ）。', opts:['A. 2年，30%','B. 3年，40%','C. 3年，50%','D. 5年，40%'], ans:[1], exp:'私募资管业务人员递延支付年限原则上不少于3年，递延金额不少于40%。'},
+  {ch:5, type:'single', q:'证券基金经营机构董事长、高管离任审计应自离任之日起（  ）个月内完成。', opts:['A. 1','B. 2','C. 3','D. 6'], ans:[1], exp:'应当进行审计，并自其离任之日起2个月内将离任审计报告向中国证监会相关派出机构报告。'},
+];
+
+// ============ 持久化存储 ============
+const STORAGE_KEY = 'securities_law_quiz_answers';
+
+// 为每道题生成唯一ID（基于章节+题型+题目前20字）
+function questionId(q) {
+  return `ch${q.ch}_${q.type}_${q.q.substring(0, 20)}`;
+}
+
+function loadSavedData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+function saveAnswerRecord(q, selectedArr, isCorrect) {
+  const data = loadSavedData();
+  data[questionId(q)] = {
+    selected: selectedArr,
+    correct: isCorrect,
+    timestamp: Date.now()
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  flashSaveIndicator();
+}
+
+function getSavedAnswer(q) {
+  const data = loadSavedData();
+  return data[questionId(q)] || null;
+}
+
+function flashSaveIndicator() {
+  const el = document.getElementById('saveIndicator');
+  if (!el) return;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function exportAnswers() {
+  const data = loadSavedData();
+  if (Object.keys(data).length === 0) {
+    alert('当前没有答题记录可导出');
+    return;
+  }
+  const exportObj = {
+    app: '证券市场基本法律法规练习App',
+    exportTime: new Date().toISOString(),
+    totalRecords: Object.keys(data).length,
+    answers: data
+  };
+  const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `法律法规练习记录_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importAnswers(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      const answers = imported.answers || imported;
+      if (typeof answers !== 'object') throw new Error('格式错误');
+      const existing = loadSavedData();
+      const merged = { ...existing, ...answers };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      const newCount = Object.keys(answers).length;
+      alert(`导入成功！共导入 ${newCount} 条记录（已与现有记录合并）`);
+      startQuiz(); // 刷新显示
+    } catch (err) {
+      alert('导入失败：文件格式不正确。请使用本应用导出的 JSON 文件。');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // 允许重复导入同一文件
+}
+
+function clearSavedData() {
+  if (!confirm('确定清除所有本地答题记录？此操作不可恢复。')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  alert('答题记录已清除');
+  startQuiz();
+}
+
+// ============ 状态 ============
+let state = {
+  questions: [],
+  index: 0,
+  answered: [],
+  userSelections: [],  // 记录每题用户选的选项
+  selected: new Set(),
+  correct: 0,
+  random: false,
+};
+
+// ============ 初始化 ============
+function filterQuestions() {
+  const ch = document.getElementById('chapterSelect').value;
+  const tp = document.getElementById('typeSelect').value;
+  let list = questionBank.filter(q => {
+    if (ch !== 'all' && q.ch != ch) return false;
+    if (tp !== 'all' && q.type !== tp) return false;
+    return true;
+  });
+  if (state.random) list = [...list].sort(() => Math.random() - 0.5);
+  return list;
+}
+
+function startQuiz() {
+  state.questions = filterQuestions();
+  state.index = 0;
+  state.answered = new Array(state.questions.length).fill(false);
+  state.userSelections = new Array(state.questions.length).fill(null);
+  state.selected = new Set();
+  state.correct = 0;
+
+  // 恢复已保存的答题记录
+  const saved = loadSavedData();
+  state.questions.forEach((q, i) => {
+    const record = saved[questionId(q)];
+    if (record) {
+      state.answered[i] = true;
+      state.userSelections[i] = record.selected;
+      if (record.correct) state.correct++;
+    }
+  });
+
+  document.getElementById('total').textContent = state.questions.length;
+  renderQuestion();
+}
+
+function toggleOrder() {
+  state.random = !state.random;
+  document.getElementById('orderLabel').textContent = state.random ? '随机' : '顺序';
+  startQuiz();
+}
+
+// ============ 渲染 ============
+function renderQuestion() {
+  const area = document.getElementById('quizArea');
+  if (state.questions.length === 0) {
+    area.innerHTML = '<div class="result-box"><h2>😕 无可用题目</h2><p>请调整筛选条件</p></div>';
+    updateStats();
+    return;
+  }
+  if (state.index >= state.questions.length) {
+    renderResult();
+    return;
+  }
+  const q = state.questions[state.index];
+  const typeMap = {single: ['单选题','tag-single'], multi: ['多选题','tag-multi'], tf: ['判断题','tag-tf']};
+  const [typeLabel, typeClass] = typeMap[q.type];
+  const chMap = {1:'第一章',2:'第二章',3:'第三章',4:'第四章',5:'第五章'};
+  const letters = ['A','B','C','D','E'];
+
+  state.selected = new Set();
+  const alreadyAnswered = state.answered[state.index];
+  const savedSelection = state.userSelections[state.index];
+
+  area.innerHTML = `
+    <div class="question-meta">
+      <span><span class="q-type-tag ${typeClass}">${typeLabel}</span> ${chMap[q.ch]}</span>
+      <span>第 ${state.index + 1} / ${state.questions.length} 题</span>
+    </div>
+    <div class="question">${state.index + 1}. ${q.q}</div>
+    <div class="options" id="optionsList">
+      ${q.opts.map((o, i) => `
+        <div class="option" data-idx="${i}" onclick="selectOption(${i})">
+          <span class="option-letter">${letters[i]}</span>${o}
+        </div>
+      `).join('')}
+    </div>
+    <div class="explanation" id="explanation">
+      <strong>【答案】</strong>${q.ans.map(i => letters[i]).join('')}<br>
+      <strong>【解析】</strong>${q.exp}
+    </div>
+    <div class="actions">
+      <button onclick="prevQuestion()" ${state.index === 0 ? 'disabled' : ''}>← 上一题</button>
+      <div class="actions-right">
+        <button id="submitBtn" class="primary" onclick="submitAnswer()">提交答案</button>
+        <button onclick="nextQuestion()">下一题 →</button>
+      </div>
+    </div>
+  `;
+
+  // 如果此题已有保存记录，恢复显示
+  if (alreadyAnswered && savedSelection) {
+    const correctSet = new Set(q.ans);
+    const selSet = new Set(savedSelection);
+    document.querySelectorAll('.option').forEach((el, idx) => {
+      el.classList.add('disabled');
+      if (correctSet.has(idx)) el.classList.add('correct');
+      else if (selSet.has(idx)) el.classList.add('wrong');
+    });
+    document.getElementById('explanation').classList.add('show');
+    document.getElementById('submitBtn').disabled = true;
+  }
+  updateStats();
+}
+
+function selectOption(i) {
+  if (state.answered[state.index]) return;
+  const q = state.questions[state.index];
+  if (q.type === 'multi') {
+    if (state.selected.has(i)) state.selected.delete(i);
+    else state.selected.add(i);
+  } else {
+    state.selected.clear();
+    state.selected.add(i);
+  }
+  document.querySelectorAll('.option').forEach((el, idx) => {
+    el.classList.toggle('selected', state.selected.has(idx));
+  });
+}
+
+function submitAnswer() {
+  if (state.selected.size === 0) {
+    alert('请先选择答案');
+    return;
+  }
+  const q = state.questions[state.index];
+  const correctSet = new Set(q.ans);
+  const selected = state.selected;
+  const isCorrect = correctSet.size === selected.size && [...correctSet].every(x => selected.has(x));
+
+  if (!state.answered[state.index]) {
+    state.answered[state.index] = true;
+    state.userSelections[state.index] = [...selected];
+    if (isCorrect) state.correct++;
+    saveAnswerRecord(q, [...selected], isCorrect);
+  }
+
+  document.querySelectorAll('.option').forEach((el, idx) => {
+    el.classList.add('disabled');
+    el.classList.remove('selected');
+    if (correctSet.has(idx)) el.classList.add('correct');
+    else if (selected.has(idx)) el.classList.add('wrong');
+  });
+  document.getElementById('explanation').classList.add('show');
+  document.getElementById('submitBtn').disabled = true;
+  updateStats();
+}
+
+function nextQuestion() {
+  state.index++;
+  renderQuestion();
+}
+
+function prevQuestion() {
+  if (state.index > 0) {
+    state.index--;
+    renderQuestion();
+  }
+}
+
+function updateStats() {
+  document.getElementById('progress').textContent = state.index + 1 > state.questions.length ? state.questions.length : state.index + 1;
+  const answeredCount = state.answered.filter(x => x).length;
+  const acc = answeredCount === 0 ? 0 : Math.round(state.correct / answeredCount * 100);
+  document.getElementById('accuracy').textContent = acc;
+  const fill = state.questions.length === 0 ? 0 : (state.index + 1) / state.questions.length * 100;
+  document.getElementById('progressFill').style.width = Math.min(fill, 100) + '%';
+}
+
+function renderResult() {
+  const area = document.getElementById('quizArea');
+  const total = state.questions.length;
+  const score = Math.round(state.correct / total * 100);
+  let emoji = '🎉', comment = '太棒了！继续保持！';
+  if (score < 60) { emoji = '💪'; comment = '需要再加油，重点复习错题！'; }
+  else if (score < 80) { emoji = '👍'; comment = '不错，再接再厉！'; }
+  area.innerHTML = `
+    <div class="result-box">
+      <h2>${emoji} 练习完成</h2>
+      <div class="score">${score}分</div>
+      <p>共 ${total} 题，答对 ${state.correct} 题</p>
+      <p style="margin-top:10px;color:#888;">${comment}</p>
+      <button class="primary" style="margin-top:24px;padding:12px 30px;font-size:15px;" onclick="startQuiz()">🔄 再练一次</button>
+    </div>
+  `;
+  document.getElementById('progressFill').style.width = '100%';
+}
+
+// 启动
+startQuiz();
+</script>
+</body>
+</html>
