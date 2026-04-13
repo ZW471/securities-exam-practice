@@ -28,8 +28,38 @@
     padding: 30px;
     text-align: center;
   }
+  header { position: relative; }
   header h1 { font-size: 26px; margin-bottom: 8px; }
   header p { opacity: 0.9; font-size: 14px; }
+  .home-btn {
+    position: absolute;
+    top: 16px; left: 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 14px;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    border-radius: 8px;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.1);
+  }
+  .home-btn:hover { background: rgba(255,255,255,0.25); border-color: #fff; }
+  .jump-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 4px;
+  }
+  .jump-group input {
+    width: 56px;
+    padding: 7px 8px;
+    border: 1px solid #cbd2e0;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+  }
+  .jump-group input:focus { outline: none; border-color: #4a5fc1; }
+  .jump-group button { padding: 7px 10px; font-size: 13px; }
   .controls {
     padding: 20px 30px;
     background: #f8f9fc;
@@ -224,6 +254,7 @@
 <body>
 <div class="container">
   <header>
+    <a href="index.html" class="home-btn" title="返回首页">🏠 首页</a>
     <h1>📚 2026证券从业资格考试练习 · 金融市场</h1>
   </header>
 
@@ -245,6 +276,11 @@
     </select>
     <button class="primary" onclick="startQuiz()">🔄 开始/重置</button>
     <button onclick="toggleOrder()">🔀 <span id="orderLabel">顺序</span></button>
+    <div class="jump-group">
+      <label>跳转：</label>
+      <input type="number" id="jumpInput" min="1" placeholder="题号" onkeydown="if(event.key==='Enter')jumpTo()">
+      <button onclick="jumpTo()">GO</button>
+    </div>
     <div class="stats">
       进度：<span id="progress">0</span> / <span id="total">0</span>
       正确率：<span id="accuracy">0</span>%
@@ -521,8 +557,26 @@ function startQuiz() {
     }
   });
 
+  // 跳到第一道未答题目；若全部已答则从头开始
+  const firstUnanswered = state.answered.indexOf(false);
+  state.index = firstUnanswered === -1 ? 0 : firstUnanswered;
+
   document.getElementById('total').textContent = state.questions.length;
   renderQuestion();
+}
+
+function jumpTo() {
+  const input = document.getElementById('jumpInput');
+  const num = parseInt(input.value, 10);
+  if (isNaN(num) || num < 1 || num > state.questions.length) {
+    alert('请输入有效题号（1 ~ ' + state.questions.length + '）');
+    input.focus();
+    return;
+  }
+  state.index = num - 1;
+  renderQuestion();
+  input.value = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function toggleOrder() {
